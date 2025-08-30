@@ -1,0 +1,45 @@
+Casos de uso de alto nivel
+
+Participantes:
+
+Numero: 001
+Caso de uso: Creacion de cuenta tipo participante
+Actores: Participante
+Descripcion: El Participante solicita registrarse, el Sistema muestra un formulario, el Participante ingresa sus datos y confirma el registro, el Sistema muestra el exito de la operacion
+Tipo: Primario
+
+Ver congresos disponibles
+Ver actividades de un congreso
+Inscribirse a congreso
+Pagar inscripcion
+Enviar trabajo a congreso
+Recargar cartera digital
+Reservar cupo a actividad
+Generar certificado
+
+Administradores de congreso:
+
+Crear congreso
+Abrir convocatoria
+Cerrar convocatoria
+Evaluar trabajo
+Definir comite cientifico
+Crear cuenta invitado
+Registrar instalacion
+Registrar actividad
+Asignar salones a actividades
+Modificar actividad
+Registrar asistencia
+Ver participantes
+Ver asistencias
+Ver reservas a talleres
+Ver ganancias por congreso
+
+Administradores de sistema:
+
+Cambiar comision por pago de inscripcion
+Crear institucion
+Crear usuario
+Desactivar usuario
+Ver reporte ganancias
+Ver reporte congresos
