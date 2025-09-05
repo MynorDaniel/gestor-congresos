@@ -6,11 +6,13 @@ USE gestor_congresos;
 
 CREATE TABLE usuario (
     id VARCHAR(30),
+    clave VARCHAR(100) NOT NULL,
     nombre VARCHAR(200) NOT NULL,
     numero VARCHAR(30) NOT NULL,
     activado BOOL DEFAULT 1,
     foto LONGBLOB,
-    correo VARCHAR(350) NOT NULL,
+    correo VARCHAR(350) UNIQUE NOT NULL,
+    esAdmin BOOL NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -141,7 +143,7 @@ CREATE TABLE configuracion_pago (
     PRIMARY KEY (tipo)
 );
 
-INSERT INTO usuario VALUES ('0', 'Sistema', '0', 1, null, '0@0.0');
+INSERT INTO usuario VALUES ('0', '1234', 'Sistema', '0', 1, null, '0@0.0', 1);
 INSERT INTO cartera (usuario) VALUES ('0');
 
 
