@@ -18,7 +18,7 @@
 
         <div class="card shadow-lg p-4 mt-3" style="width: 22rem;">
             <h2 class="text-center mb-4">Iniciar Sesión</h2>
-            <form action="LoginControlador" method="post">
+            <form action="AutenticacionControlador" method="post">
                 <div class="mb-3">
                     <label for="correo" class="form-label">Correo electrónico</label>
                     <input type="email" class="form-control" id="correo" name="correo" required>

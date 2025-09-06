@@ -4,10 +4,11 @@
  */
 package com.mynor.gestor.congresos.app.controlador;
 
-import com.mynor.gestor.congresos.app.casodeuso.UsuarioServicio;
-import com.mynor.gestor.congresos.app.creador.MapeadorDeUsuarios;
+import com.mynor.gestor.congresos.app.casodeuso.Login;
+import com.mynor.gestor.congresos.app.mapeador.MapeadorDeUsuario;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
-import com.mynor.gestor.congresos.app.modelo.Usuario;
+import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
+import com.mynor.gestor.congresos.app.modelo.fabricacionpura.CredencialesLogin;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,29 +21,30 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author mynordma
  */
-@WebServlet(name = "LoginControlador", urlPatterns = {"/LoginControlador"})
-public class LoginControlador extends HttpServlet {
+@WebServlet(name = "AutenticacionControlador", urlPatterns = {"/AutenticacionControlador"})
+public class AutenticacionControlador extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        MapeadorDeUsuarios mapeador = new MapeadorDeUsuarios();
-        UsuarioServicio usuarioServicio = new UsuarioServicio();
-        
         try {
-            Usuario usuario = mapeador.mapear(request);
+            MapeadorDeUsuario mapeador = new MapeadorDeUsuario();
+            CredencialesLogin credenciales = mapeador.mapear(request);
             
-            usuarioServicio.loguear(usuario);
+            Login login = new Login();
+            Usuario usuarioLoguedo = login.loguear(credenciales);
             
             HttpSession sesion = request.getSession();
-            sesion.setAttribute("usuarioSession", usuario);
+            sesion.setAttribute("usuarioSession", usuarioLoguedo);
             
             response.sendRedirect("home/home.jsp");
+            
         } catch (UsuarioInvalidoException ex) {
             request.setAttribute("errorAtributo", ex.getMessage());
             request.getRequestDispatcher("index.jsp").forward(request, response);
         }
+        
     }
 
 }

@@ -2,35 +2,30 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mynor.gestor.congresos.app.creador;
+package com.mynor.gestor.congresos.app.mapeador;
 
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
-import com.mynor.gestor.congresos.app.modelo.Usuario;
+import com.mynor.gestor.congresos.app.modelo.fabricacionpura.CredencialesLogin;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author mynordma
  */
-public class MapeadorDeUsuarios {
+public class MapeadorDeUsuario {
 
-    public Usuario mapear(HttpServletRequest request) throws UsuarioInvalidoException {
-        
-        //String id    = request.getParameter("id");
+    public CredencialesLogin mapear(HttpServletRequest request) throws UsuarioInvalidoException {
         String clave    = request.getParameter("clave");
-        //String nombre   = request.getParameter("nombre");
-        //String numero   = request.getParameter("numero");
-        //String activado = request.getParameter("activado");
         String correo   = request.getParameter("correo");
         
         if(!correoValido(correo)) throw new UsuarioInvalidoException("Correo inválido");
         if(!claveValida(clave)) throw new UsuarioInvalidoException("La clave debe tener una longitud menor o igual a 100");
         
-        Usuario usuario = new Usuario();
-        usuario.setCorreo(correo);
-        usuario.setClave(clave);
+        CredencialesLogin credenciales = new CredencialesLogin();
+        credenciales.setCorreo(correo);
+        credenciales.setClave(clave);
         
-        return usuario;
+        return credenciales;
     }
     
     private boolean IDValido(String id){

@@ -5,16 +5,18 @@
 package com.mynor.gestor.congresos.app.casodeuso;
 
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
-import com.mynor.gestor.congresos.app.modelo.Usuario;
+import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
+import com.mynor.gestor.congresos.app.modelo.fabricacionpura.CredencialesLogin;
 
 /**
  *
  * @author mynordma
  */
-public class UsuarioServicio {
+public class Login {
 
-    public void loguear(Usuario usuario) throws UsuarioInvalidoException {
+    public Usuario loguear(CredencialesLogin credenciales) throws UsuarioInvalidoException {
         // lanzar exception si el usuario no coincide en la base de datos
+        return new Usuario();
     }
     
 }
