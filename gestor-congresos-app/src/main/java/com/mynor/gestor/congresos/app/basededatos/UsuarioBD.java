@@ -15,25 +15,19 @@ import java.util.Map;
  *
  * @author mynordma
  */
-public class UsuarioBD {
+public class UsuarioBD extends BaseDeDatos{
     
     public Usuario crear(Usuario usuario){
         return usuario;
     }
     
     public Usuario[] leer(Map<String, String> filtros){
-        QuerySQL querySQL = new QuerySQL();
-        String sql = querySQL.getSelect("usuario", filtros);
+        String sql= getSelect("usuario", filtros);
         
         Connection conn = ConexionBD.getInstance().getConnection(); 
         try(PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
             
-            int i = 1;
-            for (String filtroValor : filtros.values()) {
-                ps.setString(i, filtroValor);
-                i++;
-            }
-            
+            asignarValoresAPreparedStatement(ps, filtros);
             ResultSet rs = ps.executeQuery();
             
             Usuario[] usuarios = new Usuario[obtenerLongitudDeResultSet(rs)];
@@ -69,13 +63,4 @@ public class UsuarioBD {
         return usuario;
     }
     
-    private int obtenerLongitudDeResultSet(ResultSet rs) throws SQLException{
-        if (rs.last()) {
-            int longitud = rs.getRow();
-            rs.beforeFirst();
-            return longitud;
-        }else{
-            return 0;
-        }
-    }
 }
