@@ -30,6 +30,23 @@ public class BaseDeDatos {
         return query.toString();
     }
     
+    protected String getInsert(String tabla, String[] valores){ // INSERT INTO tabla VALUES(?, ?, ?, ?)
+        StringBuilder query = new StringBuilder();
+        query.append("INSERT INTO ");
+        query.append(tabla);
+        query.append(" VALUES(");
+        
+        for (String valor : valores) {
+            System.out.println(valor);
+            query.append("?, ");
+        }
+
+        query.setLength(query.length() - 2);
+        query.append(")");
+        
+        return query.toString();
+    }
+    
     protected int obtenerLongitudDeResultSet(ResultSet rs) throws SQLException{
         if (rs.last()) {
             int longitud = rs.getRow();
@@ -40,10 +57,10 @@ public class BaseDeDatos {
         }
     }
     
-    protected void asignarValoresAPreparedStatement(PreparedStatement ps, Map<String, String> filtros) throws SQLException {
+    protected void asignarValoresAPreparedStatement(PreparedStatement ps, String[] valores) throws SQLException {
         int i = 1;
-        for (String filtroValor : filtros.values()) {
-            ps.setString(i, filtroValor);
+        for (String valor : valores) {
+            ps.setString(i, valor);
             i++;
         }
     }

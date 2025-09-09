@@ -12,7 +12,7 @@ CREATE TABLE usuario (
     activado BOOL DEFAULT 1,
     foto LONGBLOB,
     correo VARCHAR(350) UNIQUE NOT NULL,
-    esAdmin BOOL NOT NULL,
+    rol_sistema ENUM('PARTICIPANTE', 'ADMIN_CONGRESOS', 'ADMIN_SISTEMA') NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -143,7 +143,7 @@ CREATE TABLE configuracion_pago (
     PRIMARY KEY (tipo)
 );
 
-INSERT INTO usuario VALUES ('0', '1234', 'Sistema', '0', 1, null, '0@0.0', 1);
+INSERT INTO usuario VALUES ('0', '1234', 'system', '0', 1, null, '0@0.0', 'ADMIN_SISTEMA');
 INSERT INTO cartera (usuario) VALUES ('0');
 
 

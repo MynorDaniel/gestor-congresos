@@ -10,8 +10,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <jsp:include page="/includes/resources.jsp" />
     </head>
     <body>
+        
+        <jsp:include page="/includes/header.jsp"/>
+        <jsp:include page="/includes/error.jsp"/>
+        
         <h1>Hola desde home!</h1>
     </body>
 </html>

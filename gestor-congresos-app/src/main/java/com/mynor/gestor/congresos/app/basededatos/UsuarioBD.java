@@ -4,7 +4,9 @@
  */
 package com.mynor.gestor.congresos.app.basededatos;
 
+import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
+import com.mynor.gestor.congresos.app.modelo.fabricacionpura.RolSistema;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,17 +19,31 @@ import java.util.Map;
  */
 public class UsuarioBD extends BaseDeDatos{
     
-    public Usuario crear(Usuario usuario){
+    public Usuario crear(Usuario usuario) throws AccesoDeDatosException {
+        String sql = getInsert("usuario", usuario.getValores());
+        
+        Connection conn = ConexionBD.getInstance().getConnection();  
+        try(PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
+            
+            asignarValoresAPreparedStatement(ps, usuario.getValores());
+            int filasAfectadas = ps.executeUpdate();
+                    
+            if(filasAfectadas < 1) throw new AccesoDeDatosException("Error en el servidor");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new AccesoDeDatosException("Error en el servidor");
+        }
+        
         return usuario;
     }
     
-    public Usuario[] leer(Map<String, String> filtros){
-        String sql= getSelect("usuario", filtros);
+    public Usuario[] leer(Map<String, String> filtros) throws AccesoDeDatosException {
+        String sql = getSelect("usuario", filtros);
         
-        Connection conn = ConexionBD.getInstance().getConnection(); 
+        Connection conn = ConexionBD.getInstance().getConnection();
         try(PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
             
-            asignarValoresAPreparedStatement(ps, filtros);
+            asignarValoresAPreparedStatement(ps, filtros.values().toArray(String[]::new));
             ResultSet rs = ps.executeQuery();
             
             Usuario[] usuarios = new Usuario[obtenerLongitudDeResultSet(rs)];
@@ -40,7 +56,7 @@ public class UsuarioBD extends BaseDeDatos{
                 usuario.setNombre(rs.getString("nombre"));
                 usuario.setActivado(rs.getBoolean("activado"));
                 usuario.setCorreo(rs.getString("correo"));
-                usuario.setAdmin(rs.getBoolean("esAdmin"));
+                usuario.setRol(RolSistema.valueOf(rs.getString("rol_sistema")));
                 //usuario.setFoto(foto);
 
                 usuarios[j] = usuario;
@@ -51,7 +67,7 @@ public class UsuarioBD extends BaseDeDatos{
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return new Usuario[0];
+            throw new AccesoDeDatosException("Error en el servidor");
         }
     }
     

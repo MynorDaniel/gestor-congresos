@@ -5,10 +5,11 @@
 package com.mynor.gestor.congresos.app.controlador;
 
 import com.mynor.gestor.congresos.app.casodeuso.Login;
-import com.mynor.gestor.congresos.app.mapeador.MapeadorDeUsuario;
+import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
 import com.mynor.gestor.congresos.app.modelo.fabricacionpura.CredencialesLogin;
+import com.mynor.gestor.congresos.app.param.CredencialesLoginParametros;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -29,8 +30,9 @@ public class AutenticacionControlador extends HttpServlet {
             throws ServletException, IOException {
         
         try {
-            MapeadorDeUsuario mapeador = new MapeadorDeUsuario();
-            CredencialesLogin credenciales = mapeador.mapear(request);
+            CredencialesLoginParametros credencialesParam = new CredencialesLoginParametros();
+            credencialesParam.asignarValoresDesdeRequest(request);
+            CredencialesLogin credenciales = credencialesParam.toCredencialesLogin();
             
             Login login = new Login();
             Usuario usuarioLoguedo = login.loguear(credenciales);
@@ -40,7 +42,7 @@ public class AutenticacionControlador extends HttpServlet {
             
             response.sendRedirect("home/home.jsp");
             
-        } catch (UsuarioInvalidoException ex) {
+        } catch (UsuarioInvalidoException | AccesoDeDatosException ex) {
             request.setAttribute("errorAtributo", ex.getMessage());
             request.getRequestDispatcher("index.jsp").forward(request, response);
         }

@@ -5,6 +5,7 @@
 package com.mynor.gestor.congresos.app.casodeuso;
 
 import com.mynor.gestor.congresos.app.basededatos.UsuarioBD;
+import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
 import com.mynor.gestor.congresos.app.modelo.fabricacionpura.CredencialesLogin;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public class Login {
 
-    public Usuario loguear(CredencialesLogin credenciales) throws UsuarioInvalidoException {
+    public Usuario loguear(CredencialesLogin credenciales) throws UsuarioInvalidoException, AccesoDeDatosException {
                 
         Map<String, String> filtros = new HashMap<>();
         filtros.put("correo", credenciales.getCorreo());

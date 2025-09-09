@@ -4,6 +4,11 @@
  */
 package com.mynor.gestor.congresos.app.controlador;
 
+import com.mynor.gestor.congresos.app.casodeuso.RegistroDeUsuario;
+import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
+import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
+import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
+import com.mynor.gestor.congresos.app.param.UsuarioParametros;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,7 +31,21 @@ public class UsuarioControlador extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        try {
+            UsuarioParametros usuarioParam = new UsuarioParametros();
+            usuarioParam.asignarValoresDesdeRequest(request);
+            Usuario usuarioNuevo = usuarioParam.toUsuario();
+                        
+            RegistroDeUsuario registro = new RegistroDeUsuario();
+            Usuario usuarioRegistrado = registro.registrar(usuarioNuevo);
+            
+            request.setAttribute("infoAtributo", "Usuario " + usuarioRegistrado.getNombre() + " registrado con éxito");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+            
+        } catch (UsuarioInvalidoException | AccesoDeDatosException ex) {
+            request.setAttribute("errorAtributo", ex.getMessage());
+            request.getRequestDispatcher("usuario/registroUsuario.jsp").forward(request, response);
+        }
     }
     
     @Override

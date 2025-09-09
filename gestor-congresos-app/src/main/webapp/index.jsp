@@ -12,28 +12,30 @@
         <title>Login</title>
         <jsp:include page="/includes/resources.jsp" />
     </head>
-        <body class="d-flex flex-column align-items-center justify-content-center vh-100 bg-light">
+    <body class="bg-light">
 
+        <jsp:include page="/includes/header.jsp"/>
         <jsp:include page="/includes/error.jsp"/>
+        <jsp:include page="/includes/info.jsp"/>
 
-        <div class="card shadow-lg p-4 mt-3" style="width: 22rem;">
-            <h2 class="text-center mb-4">Iniciar Sesión</h2>
-            <form action="AutenticacionControlador" method="post">
-                <div class="mb-3">
-                    <label for="correo" class="form-label">Correo electrónico</label>
-                    <input type="email" class="form-control" id="correo" name="correo" required>
-                </div>
+        <div class="container d-flex align-items-center justify-content-center vh-100">
+            <div class="card shadow-lg p-4" style="width: 22rem;">
+                <h2 class="text-center mb-4">Iniciar Sesión</h2>
+                <form action="${pageContext.servletContext.contextPath}/AutenticacionControlador" method="post">
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Correo electrónico</label>
+                        <input type="email" class="form-control" id="correo" name="correo" required>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="clave" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="clave" name="clave" required>
-                </div>
+                    <div class="mb-3">
+                        <label for="clave" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="clave" name="clave" required>
+                    </div>
 
-                <button type="submit" class="btn btn-primary w-100">Ingresar</button>
-            </form>
+                    <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                </form>
+            </div>
         </div>
 
     </body>
-
 </html>
-

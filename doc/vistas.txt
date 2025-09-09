@@ -1,0 +1,28 @@
+Home normal:
+
+Cerrar sesion
+Lista de congresos (info basica, inscribirse)
+Cartera digital
+Mis inscripciones
+
+Home congresos:
+
+Cerrar sesion
+Lista de congresos (info basica, inscribirse)
+Cartera digital
+Mis inscripciones
+---
+Mis congresos
+Instalaciones
+
+Home admin:
+
+Cerrar sesion
+Lista de congresos (info basica, inscribirse)
+Cartera digital
+Mis inscripciones
+---
+Comision
+Instituciones
+Usuarios
+Reportes

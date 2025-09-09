@@ -58,9 +58,6 @@ public class ConexionBD {
         String rutaActual = System.getProperty("user.dir");
         String nombreArchivo = "config.properties";
         
-        System.out.println("DEBUG AQUI.....");
-        System.out.println(rutaActual + File.separator + nombreArchivo);
-        
         try(FileReader fr = new FileReader(rutaActual + File.separator + nombreArchivo)){
             properties.load(fr);
             url = properties.getProperty("db.url");

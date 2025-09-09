@@ -4,11 +4,13 @@
  */
 package com.mynor.gestor.congresos.app.modelo.dominio;
 
+import com.mynor.gestor.congresos.app.modelo.fabricacionpura.RolSistema;
+
 /**
  *
  * @author mynordma
  */
-public class Usuario {
+public class Usuario extends Entidad{
     
     private String id;
     private String clave;
@@ -17,7 +19,15 @@ public class Usuario {
     private boolean activado;
     private String correo;
     private byte[] foto;
-    private boolean admin;
+    private RolSistema rol;
+
+    public RolSistema getRol() {
+        return rol;
+    }
+
+    public void setRol(RolSistema rol) {
+        this.rol = rol;
+    }
 
     public String getId() {
         return id;
@@ -33,14 +43,6 @@ public class Usuario {
 
     public void setClave(String clave) {
         this.clave = clave;
-    }
-
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
     }
 
     public String getNombre() {
@@ -83,5 +85,17 @@ public class Usuario {
         this.foto = foto;
     }
     
-    
+    @Override
+    public String[] getValores() {
+        return new String[] {
+            id,
+            clave,
+            nombre,
+            numero,
+            activado ? "1" : "0",
+            "null", // foto
+            correo,
+            rol.name()
+        };
+    }
 }

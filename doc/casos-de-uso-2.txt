@@ -97,7 +97,7 @@ Tipo: Secundario
 Número: 016
 Caso de uso: Registrar instalación
 Actores: Administrador de congreso
-Descripción: El Administrador de congreso registra una institución con sus salones, el Sistema almacena la instalación disponible para asignar actividades.
+Descripción: El Administrador de congreso registra una instalacion con sus salones, el Sistema almacena la instalación disponible para asignar actividades.
 Tipo: Primario
 
 Número: 017
@@ -296,7 +296,9 @@ Actores: Administrador de sistema
 Descripción: El Administrador de congreso selecciona una institucion para un congreso, el Sistema valida disponibilidad y lo asigna.
 Tipo: Primario
 
+Iniciar sesion
 
+Cerrar sesion
 
 
 
