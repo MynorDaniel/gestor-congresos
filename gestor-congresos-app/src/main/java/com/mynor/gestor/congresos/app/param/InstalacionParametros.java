@@ -30,6 +30,7 @@ public class InstalacionParametros implements RequestParseador {
     public Instalacion toInstalacion() throws InstalacionInvalidaException {
         if(!nombreValido(nombre)) throw new InstalacionInvalidaException("El nombre debe tener una longitud menor o igual a 200");
         if(!ubicacionValida(ubicacion)) throw new InstalacionInvalidaException("La ubicacion no puede estar vacía");
+        if(salones == null) throw new InstalacionInvalidaException("Ingresa al menos un salón");
         
         for (String salon : salones) {
             if(!nombreValido(salon)) throw new InstalacionInvalidaException("El nombre del salón debe tener una longitud menor o igual a 200");

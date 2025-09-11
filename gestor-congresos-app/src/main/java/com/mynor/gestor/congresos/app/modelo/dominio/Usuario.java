@@ -93,7 +93,7 @@ public class Usuario extends Entidad{
             nombre,
             numero,
             activado ? "1" : "0",
-            "null", // foto
+            "NULL", // foto
             correo,
             rol.name()
         };

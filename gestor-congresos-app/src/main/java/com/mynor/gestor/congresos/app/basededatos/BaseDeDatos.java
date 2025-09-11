@@ -45,7 +45,12 @@ public abstract class BaseDeDatos <T> {
         
         for (String valor : valores) {
             System.out.println(valor);
-            query.append("?, ");
+            if(!"NULL".equals(valor)){
+                query.append("?, ");
+            }else{
+                query.append("NULL, ");
+            }
+            
         }
 
         query.setLength(query.length() - 2);
@@ -67,8 +72,11 @@ public abstract class BaseDeDatos <T> {
     protected void asignarValoresAPreparedStatement(PreparedStatement ps, String[] valores) throws SQLException {
         int i = 1;
         for (String valor : valores) {
-            ps.setString(i, valor);
-            i++;
+            if(!"NULL".equals(valor)){
+                ps.setString(i, valor);
+                i++; 
+            }
+            
         }
     }
     

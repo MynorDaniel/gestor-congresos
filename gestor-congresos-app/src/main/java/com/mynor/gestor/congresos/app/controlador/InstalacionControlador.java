@@ -31,7 +31,6 @@ public class InstalacionControlador extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         try {
 
             InstalacionParametros instalacionParam = new InstalacionParametros();
@@ -41,7 +40,12 @@ public class InstalacionControlador extends HttpServlet {
             ManejadorDeInstalaciones manejador = new ManejadorDeInstalaciones();
             manejador.crear(instalacion, (Usuario) request.getSession().getAttribute("usuarioSession"));
             
-        } catch (InstalacionInvalidaException | AccesoDeDatosException e) {
+            request.setAttribute("infoAtributo", "Instalación creada exitosamente");
+            request.getRequestDispatcher("instalaciones/crear-instalacion.jsp").forward(request, response);
+            
+        } catch (InstalacionInvalidaException | AccesoDeDatosException | UsuarioInvalidoException e) {
+            request.setAttribute("errorAtributo", e.getMessage());
+            request.getRequestDispatcher("instalaciones/crear-instalacion.jsp").forward(request, response);
         }
         
         
