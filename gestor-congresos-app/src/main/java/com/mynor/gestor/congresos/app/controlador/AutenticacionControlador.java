@@ -40,7 +40,7 @@ public class AutenticacionControlador extends HttpServlet {
             HttpSession sesion = request.getSession();
             sesion.setAttribute("usuarioSession", usuarioLoguedo);
             
-            response.sendRedirect("home/home.jsp");
+            response.sendRedirect("congresos");
             
         } catch (UsuarioInvalidoException | AccesoDeDatosException ex) {
             request.setAttribute("errorAtributo", ex.getMessage());

@@ -4,6 +4,7 @@
  */
 package com.mynor.gestor.congresos.app.basededatos;
 
+import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +13,14 @@ import java.util.Map;
 /**
  *
  * @author mynordma
+ * @param <T>
  */
-public class BaseDeDatos {
+public abstract class BaseDeDatos <T> {
+    
+    public abstract T crear(T entidad) throws AccesoDeDatosException;
+    public abstract T[] leer(Map<String, String> filtros) throws AccesoDeDatosException;
+    public abstract T actualizar(T entidad) throws AccesoDeDatosException;
+    public abstract T eliminar(T entidad) throws AccesoDeDatosException;
     
     protected String getSelect(String tabla, Map<String, String> filtros){
         StringBuilder query = new StringBuilder();
@@ -64,4 +71,5 @@ public class BaseDeDatos {
             i++;
         }
     }
+    
 }

@@ -22,7 +22,7 @@ CREATE TABLE congreso (
     precio DOUBLE NOT NULL,
     convocando BOOL DEFAULT 0,
     fecha_inicio DATE NOT NULL,
-    fecha_fin DATE NOT NULL,
+    fecha_fin DATE,
     descripcion TEXT,
     activado BOOL DEFAULT 1,
     PRIMARY KEY (nombre),
@@ -38,8 +38,10 @@ CREATE TABLE actividad (
     tipo ENUM('PONENCIA', 'TALLER') NOT NULL,
     hora_inicio TIME NOT NULL,
     hora_fin TIME NOT NULL,
+    salon VARCHAR(200),
     PRIMARY KEY (nombre, congreso),
-    CONSTRAINT fk_congreso_actividad FOREIGN KEY (congreso) REFERENCES congreso (nombre)
+    CONSTRAINT fk_congreso_actividad FOREIGN KEY (congreso) REFERENCES congreso (nombre),
+    CONSTRAINT fk_salon_actividad FOREIGN KEY (salon) REFERENCES salon (nombre)
 );
 
 CREATE TABLE cartera (

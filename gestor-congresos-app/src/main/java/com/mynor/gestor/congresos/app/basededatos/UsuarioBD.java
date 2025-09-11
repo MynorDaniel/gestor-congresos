@@ -17,8 +17,9 @@ import java.util.Map;
  *
  * @author mynordma
  */
-public class UsuarioBD extends BaseDeDatos{
+public class UsuarioBD extends BaseDeDatos <Usuario> {
     
+    @Override
     public Usuario crear(Usuario usuario) throws AccesoDeDatosException {
         String sql = getInsert("usuario", usuario.getValores());
         
@@ -37,6 +38,7 @@ public class UsuarioBD extends BaseDeDatos{
         return usuario;
     }
     
+    @Override
     public Usuario[] leer(Map<String, String> filtros) throws AccesoDeDatosException {
         String sql = getSelect("usuario", filtros);
         
@@ -71,11 +73,13 @@ public class UsuarioBD extends BaseDeDatos{
         }
     }
     
-    public Usuario actualizar(Usuario usuario){
+    @Override
+    public Usuario actualizar(Usuario usuario) throws AccesoDeDatosException {
         return usuario;
     }
     
-    public Usuario eliminar(Usuario usuario){
+    @Override
+    public Usuario eliminar(Usuario usuario) throws AccesoDeDatosException {
         return usuario;
     }
     

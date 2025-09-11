@@ -1,6 +1,15 @@
 <%@ page import="com.mynor.gestor.congresos.app.modelo.dominio.Usuario" %>
 <%@ page import="com.mynor.gestor.congresos.app.modelo.fabricacionpura.RolSistema" %>
 
+<script>
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    };
+</script>
+
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         
@@ -9,7 +18,7 @@
             String contextPath = request.getContextPath();
             String homeLink = (usuarioSession == null) 
                               ? contextPath + "/index.jsp" 
-                              : contextPath + "/home/home.jsp";
+                              : contextPath + "/congresos";
         %>
 
         <a class="navbar-brand" href="<%= homeLink %>">Gestor de Congresos</a>
@@ -45,7 +54,7 @@
                         <li class="nav-item"><a class="nav-link" href="#">Cartera digital</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Mis inscripciones</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Mis congresos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Instalaciones</a></li>
+                        <li class="nav-item"><a class="nav-link" href="${pageContext.servletContext.contextPath}/instalaciones/crear-instalacion.jsp">Instalaciones</a></li>
                         <li class="nav-item">
                             <a class="btn btn-danger" href="#">Cerrar sesión</a>
                         </li>
@@ -69,8 +78,11 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="btn btn-danger" href="#">Cerrar sesión</a>
+                            <form action="${pageContext.servletContext.contextPath}/CerrarSesionControlador" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-danger">Cerrar sesión</button>
+                            </form>
                         </li>
+
                 <%
                         }
                 %>

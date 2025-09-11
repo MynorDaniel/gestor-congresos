@@ -16,7 +16,7 @@
         
         <jsp:include page="/includes/header.jsp"/>
         <jsp:include page="/includes/error.jsp"/>
+        <jsp:include page="/congresos/listado-congresos.jsp"/>
         
-        <h1>Hola desde home!</h1>
     </body>
 </html>
