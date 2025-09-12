@@ -16,6 +16,13 @@ CREATE TABLE usuario (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE instalacion (
+    id INT AUTO_INCREMENT,
+    nombre VARCHAR(200) NOT NULL,
+    ubicacion TEXT,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE congreso (
     nombre VARCHAR(200),
     creador VARCHAR(30),
@@ -25,8 +32,10 @@ CREATE TABLE congreso (
     fecha_fin DATE,
     descripcion TEXT,
     activado BOOL DEFAULT 1,
+    instalacion INT,
     PRIMARY KEY (nombre),
-    CONSTRAINT fk_usuario_congreso FOREIGN KEY (creador) REFERENCES usuario (id)
+    CONSTRAINT fk_usuario_congreso FOREIGN KEY (creador) REFERENCES usuario (id),
+    CONSTRAINT fk_instalacion_congreso FOREIGN KEY (instalacion) REFERENCES instalacion (id)
 );
 
 CREATE TABLE actividad (
@@ -96,13 +105,6 @@ CREATE TABLE pago (
     comision_cobrada DOUBLE NOT NULL,
     PRIMARY KEY (usuario, congreso),
     CONSTRAINT fk_inscripcion_pago FOREIGN KEY (usuario, congreso) REFERENCES inscripcion (usuario, congreso)
-);
-
-CREATE TABLE instalacion (
-    id INT AUTO_INCREMENT,
-    nombre VARCHAR(200) NOT NULL,
-    ubicacion TEXT,
-    PRIMARY KEY (id)
 );
 
 CREATE TABLE salon (

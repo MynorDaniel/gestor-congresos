@@ -53,7 +53,13 @@
                         <!-- Header Congresos -->
                         <li class="nav-item"><a class="nav-link" href="#">Cartera digital</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Mis inscripciones</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Mis congresos</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" 
+                               href="${pageContext.servletContext.contextPath}/congresos?creador=${usuarioSession.id}">
+                               Mis congresos
+                            </a>
+                        </li>
+
                         <li class="nav-item"><a class="nav-link" href="${pageContext.servletContext.contextPath}/instalaciones/crear-instalacion.jsp">Instalaciones</a></li>
                         <li class="nav-item">
                             <a class="btn btn-danger" href="#">Cerrar sesión</a>

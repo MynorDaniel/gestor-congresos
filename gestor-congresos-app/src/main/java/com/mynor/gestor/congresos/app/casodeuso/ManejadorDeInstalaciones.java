@@ -12,6 +12,7 @@ import com.mynor.gestor.congresos.app.modelo.dominio.Instalacion;
 import com.mynor.gestor.congresos.app.modelo.dominio.Salon;
 import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
 import com.mynor.gestor.congresos.app.modelo.fabricacionpura.RolSistema;
+import java.util.Map;
 
 /**
  *
@@ -33,6 +34,13 @@ public class ManejadorDeInstalaciones {
             salon.setInstalacion(instalacion.getId());
             salonBD.crear(salon);
         }
+    }
+
+    public Instalacion[] obtenerInstalaciones(Map<String, String> filtros) throws AccesoDeDatosException {
+        //Verificar que el rol sea admin congresos
+        
+        InstalacionBD instalacionBD = new InstalacionBD();
+        return instalacionBD.leer(filtros);
     }
     
 }

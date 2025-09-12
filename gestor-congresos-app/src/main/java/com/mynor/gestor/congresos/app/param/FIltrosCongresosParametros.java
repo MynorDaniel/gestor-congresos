@@ -20,6 +20,7 @@ public class FIltrosCongresosParametros implements RequestParseador {
     private String fechaInicial;
     private String fechaFinal;
     private String nombre;
+    private String creador;
 
     @Override
     public void asignarValoresDesdeRequest(HttpServletRequest request) {
@@ -27,6 +28,7 @@ public class FIltrosCongresosParametros implements RequestParseador {
         fechaInicial   = request.getParameter("fechaInicial");
         fechaFinal = request.getParameter("fechaFinal");
         nombre = request.getParameter("nombre");
+        creador = request.getParameter("creador");
     }
 
     public Map<String, String> toFiltrosCongresos() throws FiltrosInvalidosException {
@@ -34,6 +36,7 @@ public class FIltrosCongresosParametros implements RequestParseador {
         if(!fechaInicialValida(fechaInicial)) throw new FiltrosInvalidosException("FIltro inválioa");
         if(!fechaFinalValida(fechaFinal)) throw new FiltrosInvalidosException("Filtro inválido"); // modificar
         if(!nombreValido(nombre)) throw new FiltrosInvalidosException("Filtro inválido"); // modificar
+        if(!creadorValido(creador)) throw new FiltrosInvalidosException("Filtro inválido"); // modificar
         
         Map<String, String> filtros = new LinkedHashMap<>();
         
@@ -41,6 +44,7 @@ public class FIltrosCongresosParametros implements RequestParseador {
         if(fechaInicial != null) filtros.put("fecha_inicio", fechaInicial);
         if(fechaFinal != null) filtros.put("fecha_fin", fechaFinal);
         if(nombre != null) filtros.put("nombre", nombre);
+        if(creador != null) filtros.put("creador", creador);
         
         return filtros;
     }
@@ -58,6 +62,10 @@ public class FIltrosCongresosParametros implements RequestParseador {
     }
     
     private boolean nombreValido(String nombre){
+        return true;
+    }
+    
+    private boolean creadorValido(String creador){
         return true;
     }
     

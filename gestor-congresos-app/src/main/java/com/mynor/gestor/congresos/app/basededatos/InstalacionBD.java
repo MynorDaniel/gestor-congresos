@@ -50,8 +50,34 @@ public class InstalacionBD extends BaseDeDatos<Instalacion> {
 
 
     @Override
-    public Instalacion[] leer(Map filtros) throws AccesoDeDatosException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Instalacion[] leer(Map<String, String> filtros) throws AccesoDeDatosException {
+        String sql = getSelect("instalacion", filtros);
+        
+        Connection conn = ConexionBD.getInstance().getConnection();
+        try(PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
+            
+            asignarValoresAPreparedStatement(ps, filtros.values().toArray(String[]::new));
+            ResultSet rs = ps.executeQuery();
+            System.out.println(sql);
+            
+            Instalacion[] instalaciones = new Instalacion[obtenerLongitudDeResultSet(rs)];
+            
+            int j = 0;
+            while(rs.next()){
+                Instalacion instalacion = new Instalacion();
+                instalacion.setId(rs.getInt("id"));
+                instalacion.setNombre(rs.getString("nombre"));
+                instalacion.setUbicacion(rs.getString("ubicacion"));
+                instalaciones[j] = instalacion;
+                j++;
+            }
+            
+            return instalaciones;
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new AccesoDeDatosException("Error en el servidor");
+        }
     }
 
     @Override
