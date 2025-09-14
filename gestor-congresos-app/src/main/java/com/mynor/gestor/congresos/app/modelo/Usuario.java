@@ -2,15 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mynor.gestor.congresos.app.modelo.dominio;
-
-import com.mynor.gestor.congresos.app.modelo.fabricacionpura.RolSistema;
+package com.mynor.gestor.congresos.app.modelo;
 
 /**
  *
  * @author mynordma
  */
-public class Usuario extends Entidad{
+public class Usuario {
     
     private String id;
     private String clave;
@@ -83,19 +81,5 @@ public class Usuario extends Entidad{
 
     public void setFoto(byte[] foto) {
         this.foto = foto;
-    }
-    
-    @Override
-    public String[] getValores() {
-        return new String[] {
-            id,
-            clave,
-            nombre,
-            numero,
-            activado ? "1" : "0",
-            "NULL", // foto
-            correo,
-            rol.name()
-        };
     }
 }

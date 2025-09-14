@@ -1,5 +1,5 @@
-<%@ page import="com.mynor.gestor.congresos.app.modelo.dominio.Usuario" %>
-<%@ page import="com.mynor.gestor.congresos.app.modelo.fabricacionpura.RolSistema" %>
+<%@ page import="com.mynor.gestor.congresos.app.modelo.Usuario" %>
+<%@ page import="com.mynor.gestor.congresos.app.modelo.RolSistema" %>
 
 <script>
     window.onpageshow = function(event) {
@@ -44,9 +44,7 @@
                         <!-- Header Participante -->
                         <li class="nav-item"><a class="nav-link" href="#">Cartera digital</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Mis inscripciones</a></li>
-                        <li class="nav-item">
-                            <a class="btn btn-danger" href="#">Cerrar sesión</a>
-                        </li>
+                       
                 <%
                         } else if (rol == RolSistema.ADMIN_CONGRESOS) {
                 %>
@@ -61,9 +59,7 @@
                         </li>
 
                         <li class="nav-item"><a class="nav-link" href="${pageContext.servletContext.contextPath}/instalaciones/crear-instalacion.jsp">Instalaciones</a></li>
-                        <li class="nav-item">
-                            <a class="btn btn-danger" href="#">Cerrar sesión</a>
-                        </li>
+                      
                 <%
                         } else if (rol == RolSistema.ADMIN_SISTEMA) {
                 %>
@@ -83,11 +79,7 @@
                             </ul>
                         </li>
 
-                        <li class="nav-item">
-                            <form action="${pageContext.servletContext.contextPath}/CerrarSesionControlador" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-danger">Cerrar sesión</button>
-                            </form>
-                        </li>
+                        
 
                 <%
                         }
@@ -97,9 +89,17 @@
                                 Bienvenido, <%= usuarioSession.getNombre() %>
                             </span>
                         </li>
+                        
+                        <li class="nav-item">
+                            <form action="${pageContext.servletContext.contextPath}/CerrarSesionControlador" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-danger">Cerrar sesión</button>
+                            </form>
+                        </li>
                 <%
                     }
                 %>
+                
+                
             </ul>
         </div>
     </div>

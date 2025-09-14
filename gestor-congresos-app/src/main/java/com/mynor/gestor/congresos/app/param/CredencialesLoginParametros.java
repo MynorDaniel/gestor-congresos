@@ -5,7 +5,7 @@
 package com.mynor.gestor.congresos.app.param;
 
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
-import com.mynor.gestor.congresos.app.modelo.fabricacionpura.CredencialesLogin;
+import com.mynor.gestor.congresos.app.modelo.CredencialesLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 

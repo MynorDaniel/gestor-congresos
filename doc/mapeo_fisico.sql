@@ -28,8 +28,8 @@ CREATE TABLE congreso (
     creador VARCHAR(30),
     precio DOUBLE NOT NULL,
     convocando BOOL DEFAULT 0,
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE,
+    fecha DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
     descripcion TEXT,
     activado BOOL DEFAULT 1,
     instalacion INT,
@@ -147,7 +147,7 @@ CREATE TABLE configuracion_pago (
     PRIMARY KEY (tipo)
 );
 
-INSERT INTO usuario VALUES ('0', '1234', 'system', '0', 1, null, '0@0.0', 'ADMIN_SISTEMA');
+INSERT INTO usuario VALUES ('0', '1234', 'sistema', '0', 1, null, '0@0.0', 'ADMIN_SISTEMA');
 INSERT INTO cartera (usuario) VALUES ('0');
 
 

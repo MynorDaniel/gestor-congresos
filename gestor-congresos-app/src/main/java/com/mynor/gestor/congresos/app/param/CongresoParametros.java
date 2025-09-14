@@ -5,11 +5,10 @@
 package com.mynor.gestor.congresos.app.param;
 
 import com.mynor.gestor.congresos.app.excepcion.CongresoInvalidoException;
-import com.mynor.gestor.congresos.app.modelo.dominio.Congreso;
-import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
+import com.mynor.gestor.congresos.app.modelo.Congreso;
+import com.mynor.gestor.congresos.app.modelo.Usuario;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -20,7 +19,7 @@ public class CongresoParametros extends Validador implements EntidadParseador<Co
     private final String nombre;
     private final String precioStr;
     private final String convocandoStr;
-    private final String fechaInicioStr;
+    private final String fechaStr;
     private final String fechaFinStr;
     private final String descripcion;
     private final String instalacionIdStr;
@@ -30,7 +29,7 @@ public class CongresoParametros extends Validador implements EntidadParseador<Co
         nombre = request.getParameter("nombre");
         precioStr = request.getParameter("precio");
         convocandoStr = request.getParameter("convocando");
-        fechaInicioStr = request.getParameter("fecha_inicio");
+        fechaStr = request.getParameter("fecha");
         fechaFinStr = request.getParameter("fecha_fin"); // opcional
         descripcion = request.getParameter("descripcion");
         instalacionIdStr = request.getParameter("instalacion");
@@ -42,7 +41,7 @@ public class CongresoParametros extends Validador implements EntidadParseador<Co
         if(!nombreCongresoValido(nombre)) throw new CongresoInvalidoException("Verifica que el nombre tenga una longitud menor o igual a 200");
         if(!precioValido(precioStr)) throw new CongresoInvalidoException("Verifica que el precio sea un decimal positivo");
         if(!convocacionValida(convocandoStr)) throw new CongresoInvalidoException("Verifica que el valor de la convocatoria sea válido");
-        if(!fechaInicioValida(fechaInicioStr)) throw new CongresoInvalidoException("Verifica que la fecha de inicio sea válida");
+        if(!fechaInicioValida(fechaStr)) throw new CongresoInvalidoException("Verifica que la fecha de inicio sea válida");
         if(!fechaFinValida(fechaFinStr)) throw new CongresoInvalidoException("Verifica que la fecha de finalización sea válida");
         if(!instalacionValida(instalacionIdStr)) throw new CongresoInvalidoException("Verifica que la instalación sea válida");
         if(!creadorValido(creador)) throw new CongresoInvalidoException("No puedes crear este congreso, vuelve a iniciar sesión");
@@ -53,11 +52,11 @@ public class CongresoParametros extends Validador implements EntidadParseador<Co
         congreso.setCreador(creador);
         congreso.setPrecio(Double.parseDouble(precioStr));
         congreso.setConvocando("true".equals(convocandoStr));
-        congreso.setFechaInicio(LocalDate.parse(fechaInicioStr));
-        congreso.setFechaFin(StringUtils.isBlank(fechaFinStr) ? null : LocalDate.parse(fechaFinStr));
+        congreso.setFechaInicio(LocalDate.parse(fechaStr));
+        congreso.setFechaFin(LocalDate.parse(fechaFinStr));
         congreso.setDescripcion(descripcion);
         congreso.setActivado(true);
-        congreso.setInstalacionId(instalacionIdStr);
+        congreso.setInstalacionId(Integer.parseInt(instalacionIdStr));
         
         return congreso;
     }

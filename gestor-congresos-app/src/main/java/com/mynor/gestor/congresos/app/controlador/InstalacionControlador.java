@@ -6,8 +6,8 @@ package com.mynor.gestor.congresos.app.controlador;
 
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstalaciones;
 import com.mynor.gestor.congresos.app.excepcion.*;
-import com.mynor.gestor.congresos.app.modelo.dominio.Instalacion;
-import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
+import com.mynor.gestor.congresos.app.modelo.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Usuario;
 import com.mynor.gestor.congresos.app.param.InstalacionParametros;
 import java.io.IOException;
 import jakarta.servlet.ServletException;

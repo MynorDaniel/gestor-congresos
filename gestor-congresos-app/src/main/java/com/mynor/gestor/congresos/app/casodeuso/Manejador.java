@@ -6,20 +6,18 @@ package com.mynor.gestor.congresos.app.casodeuso;
 
 import com.mynor.gestor.congresos.app.basededatos.UsuarioBD;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
-import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
-import com.mynor.gestor.congresos.app.modelo.Usuario;
-import com.mynor.gestor.congresos.app.modelo.CredencialesLogin;
+import com.mynor.gestor.congresos.app.modelo.RolSistema;
 
 /**
  *
  * @author mynordma
  */
-public class Login {
-
-    public Usuario loguear(CredencialesLogin credenciales) throws UsuarioInvalidoException, AccesoDeDatosException {
-        //Verificar que el usuario existe
-        UsuarioBD usuarioBD = new UsuarioBD();
-        return usuarioBD.existe(credenciales);
-    }
+public class Manejador {
     
+    protected boolean esAdminDeCongresos(String creador) throws AccesoDeDatosException {
+        UsuarioBD usuarioBD = new UsuarioBD();
+        RolSistema rol = usuarioBD.obtenerRolDeUsuario(creador);
+        
+        return rol == RolSistema.ADMIN_CONGRESOS;
+    }
 }

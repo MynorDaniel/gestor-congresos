@@ -6,14 +6,15 @@ package com.mynor.gestor.congresos.app.controlador;
 
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstalaciones;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
-import com.mynor.gestor.congresos.app.modelo.dominio.Instalacion;
+import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
+import com.mynor.gestor.congresos.app.modelo.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Usuario;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 
 /**
  *
@@ -28,11 +29,11 @@ public class CrearCongresoControlador extends HttpServlet {
         
         try {
             ManejadorDeInstalaciones manejador = new ManejadorDeInstalaciones();
-            Instalacion[] instalaciones = manejador.obtenerInstalaciones(new HashMap<>());
+            Instalacion[] instalaciones = manejador.obtenerInstalaciones((Usuario) request.getSession().getAttribute("usuarioSession"));
             
             request.setAttribute("instalacionesAtributo", instalaciones);
             request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
-        } catch (AccesoDeDatosException ex) {
+        } catch (AccesoDeDatosException | UsuarioInvalidoException ex) {
             request.setAttribute("errorAtributo", ex.getMessage());
             request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
         }

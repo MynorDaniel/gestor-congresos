@@ -5,8 +5,8 @@
 package com.mynor.gestor.congresos.app.param;
 
 import com.mynor.gestor.congresos.app.excepcion.InstalacionInvalidaException;
-import com.mynor.gestor.congresos.app.modelo.dominio.Instalacion;
-import com.mynor.gestor.congresos.app.modelo.dominio.Salon;
+import com.mynor.gestor.congresos.app.modelo.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Salon;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 

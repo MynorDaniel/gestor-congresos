@@ -5,89 +5,105 @@
 package com.mynor.gestor.congresos.app.basededatos;
 
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
-import com.mynor.gestor.congresos.app.modelo.dominio.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Salon;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Map;
 
 /**
  *
  * @author mynordma
  */
-public class InstalacionBD extends BaseDeDatos<Instalacion> {
+public class InstalacionBD extends BaseDeDatos {
 
-    @Override
     public Instalacion crear(Instalacion instalacion) throws AccesoDeDatosException {
-        String sql = getInsert("instalacion", instalacion.getValores());
+        String sqlInstalacion = "INSERT INTO instalacion(nombre, ubicacion) VALUES(?, ?)";
+        String sqlSalon = "INSERT INTO salon(nombre, instalacion) VALUES(?, ?)";
 
-        Connection conn = ConexionBD.getInstance().getConnection();  
-        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        Connection conn = ConexionBD.getInstance().getConnection();
 
-            asignarValoresAPreparedStatement(ps, instalacion.getValores());
+        try {
+            conn.setAutoCommit(false);
 
-            int filasAfectadas = ps.executeUpdate();
-            if (filasAfectadas < 1) {
-                throw new AccesoDeDatosException("Error en el servidor");
-            }
+            // Insertar la instalacion
+            try (PreparedStatement ps = conn.prepareStatement(sqlInstalacion, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, instalacion.getNombre());
+                ps.setString(2, instalacion.getUbicacion());
 
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    int idGenerado = rs.getInt(1);
-                    instalacion.setId(idGenerado);
+                int filasAfectadas = ps.executeUpdate();
+                if (filasAfectadas < 1) {
+                    throw new AccesoDeDatosException("No se pudo guardar la instalación");
+                }
+
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int idGenerado = rs.getInt(1);
+                        instalacion.setId(idGenerado);
+                    } else {
+                        throw new AccesoDeDatosException("Error en el servidor");
+                    }
                 }
             }
 
+            // Insertar todos los salones
+            try (PreparedStatement psSalon = conn.prepareStatement(sqlSalon)) {
+                for (Salon salon : instalacion.getSalones()) {
+                    psSalon.setString(1, salon.getNombre());
+                    psSalon.setInt(2, instalacion.getId());
+                    psSalon.addBatch();
+                }
+                psSalon.executeBatch();
+            }
+
+            conn.commit();
+
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
             throw new AccesoDeDatosException("Error en el servidor");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
         }
 
         return instalacion;
     }
 
-
-    @Override
-    public Instalacion[] leer(Map<String, String> filtros) throws AccesoDeDatosException {
-        String sql = getSelect("instalacion", filtros);
+    public Instalacion[] leer() throws AccesoDeDatosException {
+        String sql = "SELECT * FROM instalacion";
         
         Connection conn = ConexionBD.getInstance().getConnection();
-        try(PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             
-            asignarValoresAPreparedStatement(ps, filtros.values().toArray(String[]::new));
             ResultSet rs = ps.executeQuery();
-            System.out.println(sql);
-            
+
             Instalacion[] instalaciones = new Instalacion[obtenerLongitudDeResultSet(rs)];
-            
             int j = 0;
-            while(rs.next()){
+            while (rs.next()) {
                 Instalacion instalacion = new Instalacion();
                 instalacion.setId(rs.getInt("id"));
                 instalacion.setNombre(rs.getString("nombre"));
                 instalacion.setUbicacion(rs.getString("ubicacion"));
+
                 instalaciones[j] = instalacion;
                 j++;
             }
-            
+
             return instalaciones;
-            
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             throw new AccesoDeDatosException("Error en el servidor");
         }
-    }
-
-    @Override
-    public Instalacion actualizar(Instalacion instalacion) throws AccesoDeDatosException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Instalacion eliminar(Instalacion instalacion) throws AccesoDeDatosException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

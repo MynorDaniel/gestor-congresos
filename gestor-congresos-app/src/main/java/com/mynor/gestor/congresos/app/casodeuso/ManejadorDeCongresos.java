@@ -5,26 +5,18 @@
 package com.mynor.gestor.congresos.app.casodeuso;
 
 import com.mynor.gestor.congresos.app.basededatos.CongresoBD;
-import com.mynor.gestor.congresos.app.basededatos.UsuarioBD;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.CongresoInvalidoException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
-import com.mynor.gestor.congresos.app.modelo.dominio.Congreso;
-import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
+import com.mynor.gestor.congresos.app.modelo.Congreso;
+import com.mynor.gestor.congresos.app.modelo.FiltrosCongreso;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
  * @author mynordma
  */
-public class ManejadorDeCongresos {
-
-    public Congreso[] obtenerCongresos(Map<String, String> filtros) throws AccesoDeDatosException {
-        CongresoBD congresoBD = new CongresoBD();
-        return congresoBD.leer(filtros);
-    }
+public class ManejadorDeCongresos extends Manejador {
 
     public Congreso crearCongreso(Congreso congresoNuevo) throws CongresoInvalidoException, UsuarioInvalidoException, AccesoDeDatosException {
         //Verificar el rol
@@ -43,30 +35,37 @@ public class ManejadorDeCongresos {
         return congresoNuevo;
     }
 
-    private boolean esAdminDeCongresos(String creador) throws AccesoDeDatosException {
-        Map<String, String> filtros = new HashMap<>();
-        filtros.put("rol_sistema", "ADMIN_CONGRESOS");
-        filtros.put("id", creador);
-        
-        UsuarioBD usuarioBD = new UsuarioBD();
-        Usuario[] coincidencias = usuarioBD.leer(filtros);
-        
-        return coincidencias.length > 0;
-    }
-
     private boolean fechasLogicas(LocalDate fechaInicio, LocalDate fechaFin) {
         return !fechaInicio.isAfter(fechaFin);
     }
 
-    private boolean instalacionOcupada(Congreso congreso) throws AccesoDeDatosException {
-        Map<String, String> filtros = new HashMap<>();
-        filtros.put("instalacion", congreso.getInstalacionId());
-        filtros.put("fecha", congreso.getFechaInicio().toString() + "@" + congreso.getFechaFin().toString()); // @: separador
-        
+    private boolean instalacionOcupada(Congreso congresoNuevo) throws AccesoDeDatosException {
         CongresoBD congresoBD = new CongresoBD();
+        FiltrosCongreso filtros = new FiltrosCongreso();
+        filtros.setInstalacion(congresoNuevo.getInstalacionId());
+        
         Congreso[] coincidencias = congresoBD.leer(filtros);
         
         return coincidencias.length > 0;
+    }
+
+    public Congreso obtenerCongreso(String nombre) throws AccesoDeDatosException {
+        CongresoBD congresoBD = new CongresoBD();
+        FiltrosCongreso filtros = new FiltrosCongreso();
+        filtros.setNombre(nombre);
+        return congresoBD.leer(filtros)[0];
+    }
+
+    public Congreso[] obtenerCongresos(String creador) throws AccesoDeDatosException {
+        CongresoBD congresoBD = new CongresoBD();
+        FiltrosCongreso filtros = new FiltrosCongreso();
+        filtros.setCreador(creador);
+        return congresoBD.leer(filtros);
+    }
+
+    public Congreso[] obtenerCongresos() throws AccesoDeDatosException {
+        CongresoBD congresoBD = new CongresoBD();
+        return congresoBD.leer(new FiltrosCongreso());
     }
     
 }

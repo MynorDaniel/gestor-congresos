@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mynor.gestor.congresos.app.modelo.dominio;
+package com.mynor.gestor.congresos.app.modelo;
 
 import java.time.LocalDate;
 
@@ -16,17 +16,17 @@ public class Congreso {
     private String creador;
     private double precio;
     private boolean convocando;
-    private LocalDate fechaInicio;
+    private LocalDate fecha;
     private LocalDate fechaFin;
     private String descripcion;
     private boolean activado;
-    private String instalacionId;
+    private int instalacionId;
 
-    public String getInstalacionId() {
+    public int getInstalacionId() {
         return instalacionId;
     }
 
-    public void setInstalacionId(String instalacionId) {
+    public void setInstalacionId(int instalacionId) {
         this.instalacionId = instalacionId;
     }
     
@@ -63,11 +63,11 @@ public class Congreso {
     }
 
     public LocalDate getFechaInicio() {
-        return fechaInicio;
+        return fecha;
     }
 
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
+    public void setFechaInicio(LocalDate fecha) {
+        this.fecha = fecha;
     }
 
     public LocalDate getFechaFin() {

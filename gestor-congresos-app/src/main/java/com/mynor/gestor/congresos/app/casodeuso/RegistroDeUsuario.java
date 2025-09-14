@@ -7,10 +7,9 @@ package com.mynor.gestor.congresos.app.casodeuso;
 import com.mynor.gestor.congresos.app.basededatos.UsuarioBD;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
-import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
-import com.mynor.gestor.congresos.app.modelo.fabricacionpura.RolSistema;
-import java.util.HashMap;
-import java.util.Map;
+import com.mynor.gestor.congresos.app.modelo.FiltrosUsuario;
+import com.mynor.gestor.congresos.app.modelo.Usuario;
+import com.mynor.gestor.congresos.app.modelo.RolSistema;
 
 /**
  *
@@ -22,17 +21,17 @@ public class RegistroDeUsuario {
         UsuarioBD usuarioBD = new UsuarioBD();
         
         // Verificar que el id no exista
-        Map<String, String> filtros = new HashMap<>();
-        filtros.put("id", usuarioNuevo.getId());
+        FiltrosUsuario filtroId = new FiltrosUsuario();
+        filtroId.setId(usuarioNuevo.getId());
         
-        Usuario[] coincidenciasID = usuarioBD.leer(filtros);
+        Usuario[] coincidenciasID = usuarioBD.leer(filtroId);
         if(coincidenciasID.length > 0) throw new UsuarioInvalidoException("ID en uso");
         
         // Verificar que el correo no exista
-        Map<String, String> filtros2 = new HashMap<>();
-        filtros2.put("correo", usuarioNuevo.getCorreo());
+        FiltrosUsuario filtroCorreo = new FiltrosUsuario();
+        filtroId.setCorreo(usuarioNuevo.getCorreo());
         
-        Usuario[] coincidenciasCorreo = usuarioBD.leer(filtros2);
+        Usuario[] coincidenciasCorreo = usuarioBD.leer(filtroCorreo);
         if(coincidenciasCorreo.length > 0) throw new UsuarioInvalidoException("Correo en uso");
         
         //Asignar permisos

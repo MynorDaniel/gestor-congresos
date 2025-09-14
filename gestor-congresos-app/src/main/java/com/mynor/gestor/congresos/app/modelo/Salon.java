@@ -2,13 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mynor.gestor.congresos.app.modelo.dominio;
+package com.mynor.gestor.congresos.app.modelo;
 
 /**
  *
  * @author mynordma
  */
-public class Salon extends Entidad {
+public class Salon {
     
     private String nombre;
     private int instalacion;
@@ -27,14 +27,6 @@ public class Salon extends Entidad {
 
     public void setInstalacion(int instalacion) {
         this.instalacion = instalacion;
-    }
-
-    @Override
-    public String[] getValores() {
-        return new String[]{
-            nombre,
-            String.valueOf(instalacion)
-        };
     }
     
 }

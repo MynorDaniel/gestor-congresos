@@ -1,11 +1,9 @@
-<%@page import="com.mynor.gestor.congresos.app.modelo.dominio.Congreso"%>
+<%@page import="com.mynor.gestor.congresos.app.modelo.Congreso"%>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
-    Congreso[] congresos = (Congreso[]) request.getAttribute("congresosAtributo");
-    Congreso congreso = (congresos != null && congresos.length > 0) ? congresos[0] : null;
-    request.setAttribute("primerCongreso", congreso);
+    Congreso congreso = (Congreso) request.getAttribute("congreso");
 %>
 
 <!DOCTYPE html>
@@ -23,24 +21,24 @@
 
        
 
-        <c:if test="${not empty primerCongreso}">
+        <c:if test="${not empty congreso}">
             <div class="card shadow-sm p-3 mb-4">
-                <h2 class="card-title">${primerCongreso.nombre}</h2>
-                <p><strong>Precio:</strong> $${primerCongreso.precio}</p>
+                <h2 class="card-title">${congreso.nombre}</h2>
+                <p><strong>Precio:</strong> $${congreso.precio}</p>
                 <p><strong>Convocando:</strong> 
                     <c:choose>
-                        <c:when test="${primerCongreso.convocando}">Sí</c:when>
+                        <c:when test="${congreso.convocando}">Sí</c:when>
                         <c:otherwise>No</c:otherwise>
                     </c:choose>
                 </p>
-                <p><strong>Inicio:</strong> ${primerCongreso.fechaInicio}</p>
-                <p><strong>Fin:</strong> <c:out value="${primerCongreso.fechaFin != null ? primerCongreso.fechaFin : '-'}"/></p>
-                <p><strong>Descripción:</strong> <c:out value="${primerCongreso.descripcion != null ? primerCongreso.descripcion : '-'}"/></p>
+                <p><strong>Inicio:</strong> ${congreso.fechaInicio}</p>
+                <p><strong>Fin:</strong> <c:out value="${congreso.fechaFin}"/></p>
+                <p><strong>Descripción:</strong> <c:out value="${congreso.descripcion != null ? congreso.descripcion : '-'}"/></p>
                 
             </div>
         </c:if>
 
-        <c:if test="${empty primerCongreso}">
+        <c:if test="${empty congreso}">
             <p>No hay congresos disponibles.</p>
         </c:if>
 

@@ -7,7 +7,7 @@ package com.mynor.gestor.congresos.app.controlador;
 import com.mynor.gestor.congresos.app.casodeuso.RegistroDeUsuario;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
-import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
+import com.mynor.gestor.congresos.app.modelo.Usuario;
 import com.mynor.gestor.congresos.app.param.UsuarioParametros;
 import java.io.IOException;
 import jakarta.servlet.ServletException;

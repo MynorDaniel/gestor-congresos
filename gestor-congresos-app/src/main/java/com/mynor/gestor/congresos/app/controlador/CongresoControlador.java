@@ -7,18 +7,16 @@ package com.mynor.gestor.congresos.app.controlador;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeCongresos;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.CongresoInvalidoException;
-import com.mynor.gestor.congresos.app.excepcion.FiltrosInvalidosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
-import com.mynor.gestor.congresos.app.modelo.dominio.Congreso;
+import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.param.CongresoParametros;
-import com.mynor.gestor.congresos.app.param.FIltrosCongresosParametros;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -32,28 +30,32 @@ public class CongresoControlador extends HttpServlet {
             throws ServletException, IOException {
         
         try {
-            FIltrosCongresosParametros filtrosParam = new FIltrosCongresosParametros(request);
-            Map<String, String> filtros = filtrosParam.toEntidad();
+            String nombre = request.getParameter("nombre");
+            String creador = request.getParameter("creador");
 
             ManejadorDeCongresos manejador = new ManejadorDeCongresos();
-            Congreso[] congresos = manejador.obtenerCongresos(filtros);
             
-            request.setAttribute("congresosAtributo", congresos);
-            
-            if(filtros.containsKey("institucion") || filtros.containsKey("fecha_inicio")){
-                //pagina reportes
-            }else if(filtros.containsKey("nombre")){
+            if(!StringUtils.isBlank(nombre)){
+                Congreso congreso = manejador.obtenerCongreso(nombre);
+                request.setAttribute("congreso", congreso);
+                
                 //pagina congreso
                 request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
-            }else if(filtros.containsKey("creador")){
+            }else if(!StringUtils.isBlank(creador)){
+                Congreso[] congresos = manejador.obtenerCongresos(creador);
+                request.setAttribute("congresosAtributo", congresos);
+                
                 //pagina mis congresos
                 request.getRequestDispatcher("congresos/mis-congresos.jsp").forward(request, response);
             }else{
+                Congreso[] congresos = manejador.obtenerCongresos();
+                request.setAttribute("congresosAtributo", congresos);
+                
                 //home
                 request.getRequestDispatcher("home/home.jsp").forward(request, response);
             }
             
-        } catch (FiltrosInvalidosException | AccesoDeDatosException e) {
+        } catch (AccesoDeDatosException e) {
             request.setAttribute("errorAtributo", e.getMessage());
             request.getRequestDispatcher("home/home.jsp").forward(request, response);
         }
