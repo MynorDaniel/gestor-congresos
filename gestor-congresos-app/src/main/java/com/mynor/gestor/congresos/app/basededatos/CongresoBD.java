@@ -22,7 +22,7 @@ public class CongresoBD extends BaseDeDatos <Congreso> {
 
     @Override
     public Congreso[] leer(Map<String, String> filtros) throws AccesoDeDatosException {
-        String sql = (filtros.containsKey("institucion") || filtros.containsKey("fecha_inicio")) 
+        String sql = (filtros.containsKey("institucion") || filtros.containsKey("fecha")) 
              ? getSelectCongresosConJoins(filtros)
              : getSelect("congreso", filtros);
         

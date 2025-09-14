@@ -13,16 +13,15 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author mynordma
  */
-public class UsuarioParametros implements RequestParseador {
+public class UsuarioParametros extends Validador implements EntidadParseador<Usuario> {
     
-    private String id;
-    private String clave;
-    private String nombre;
-    private String numero;
-    private String correo;
+    private final String id;
+    private final String clave;
+    private final String nombre;
+    private final String numero;
+    private final String correo;
 
-    @Override
-    public void asignarValoresDesdeRequest(HttpServletRequest request) {
+    public UsuarioParametros(HttpServletRequest request) {
         clave    = request.getParameter("clave");
         correo   = request.getParameter("correo");
         id = request.getParameter("id");
@@ -30,7 +29,8 @@ public class UsuarioParametros implements RequestParseador {
         numero = request.getParameter("numero");
     }
 
-    public Usuario toUsuario() throws UsuarioInvalidoException {
+    @Override
+    public Usuario toEntidad() throws UsuarioInvalidoException {
         if(!correoValido(correo)) throw new UsuarioInvalidoException("Correo inválido");
         if(!claveValida(clave)) throw new UsuarioInvalidoException("La clave debe tener una longitud menor o igual a 100");
         if(!IDValido(id)) throw new UsuarioInvalidoException("El id debe tener una longitud menor o igual a 30");

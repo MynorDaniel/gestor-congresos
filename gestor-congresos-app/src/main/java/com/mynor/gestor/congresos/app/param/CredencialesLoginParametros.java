@@ -13,18 +13,18 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author mynordma
  */
-public class CredencialesLoginParametros implements RequestParseador {
+public class CredencialesLoginParametros extends Validador implements EntidadParseador<CredencialesLogin> {
     
-    private String correo;
-    private String clave;
+    private final String correo;
+    private final String clave;
 
-    @Override
-    public void asignarValoresDesdeRequest(HttpServletRequest request) {
-        clave    = request.getParameter("clave");
-        correo   = request.getParameter("correo");
+    public CredencialesLoginParametros(HttpServletRequest request) {
+        clave = request.getParameter("clave");
+        correo = request.getParameter("correo");
     }
 
-    public CredencialesLogin toCredencialesLogin() throws UsuarioInvalidoException {
+    @Override
+    public CredencialesLogin toEntidad() throws UsuarioInvalidoException {
         if(!correoValido(correo)) throw new UsuarioInvalidoException("Correo inválido");
         if(!claveValida(clave)) throw new UsuarioInvalidoException("La clave debe tener una longitud menor o igual a 100");
         

@@ -20,7 +20,16 @@ public class Congreso {
     private LocalDate fechaFin;
     private String descripcion;
     private boolean activado;
+    private String instalacionId;
 
+    public String getInstalacionId() {
+        return instalacionId;
+    }
+
+    public void setInstalacionId(String instalacionId) {
+        this.instalacionId = instalacionId;
+    }
+    
     public String getNombre() {
         return nombre;
     }

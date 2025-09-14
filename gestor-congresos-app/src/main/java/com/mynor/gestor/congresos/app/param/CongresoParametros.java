@@ -4,25 +4,29 @@
  */
 package com.mynor.gestor.congresos.app.param;
 
+import com.mynor.gestor.congresos.app.excepcion.CongresoInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.dominio.Congreso;
+import com.mynor.gestor.congresos.app.modelo.dominio.Usuario;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author mynordma
  */
-public class CongresoParametros extends Validador implements RequestParseador, EntidadParseador<Congreso> {
+public class CongresoParametros extends Validador implements EntidadParseador<Congreso> {
     
-    private String nombre;
-    private String precioStr;
-    private String convocandoStr;
-    private String fechaInicioStr;
-    private String fechaFinStr;
-    private String descripcion;
-    private String instalacionIdStr;
-
-    @Override
-    public void asignarValoresDesdeRequest(HttpServletRequest request) {
+    private final String nombre;
+    private final String precioStr;
+    private final String convocandoStr;
+    private final String fechaInicioStr;
+    private final String fechaFinStr;
+    private final String descripcion;
+    private final String instalacionIdStr;
+    private final String creador;
+    
+    public CongresoParametros(HttpServletRequest request) {
         nombre = request.getParameter("nombre");
         precioStr = request.getParameter("precio");
         convocandoStr = request.getParameter("convocando");
@@ -30,11 +34,62 @@ public class CongresoParametros extends Validador implements RequestParseador, E
         fechaFinStr = request.getParameter("fecha_fin"); // opcional
         descripcion = request.getParameter("descripcion");
         instalacionIdStr = request.getParameter("instalacion");
+        creador = ((Usuario) request.getSession(false)).getId();
     }
 
     @Override
-    public Congreso toEntidad() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Congreso toEntidad() throws CongresoInvalidoException {
+        if(!nombreCongresoValido(nombre)) throw new CongresoInvalidoException("Verifica que el nombre tenga una longitud menor o igual a 200");
+        if(!precioValido(precioStr)) throw new CongresoInvalidoException("Verifica que el precio sea un decimal positivo");
+        if(!convocacionValida(convocandoStr)) throw new CongresoInvalidoException("Verifica que el valor de la convocatoria sea válido");
+        if(!fechaInicioValida(fechaInicioStr)) throw new CongresoInvalidoException("Verifica que la fecha de inicio sea válida");
+        if(!fechaFinValida(fechaFinStr)) throw new CongresoInvalidoException("Verifica que la fecha de finalización sea válida");
+        if(!instalacionValida(instalacionIdStr)) throw new CongresoInvalidoException("Verifica que la instalación sea válida");
+        if(!creadorValido(creador)) throw new CongresoInvalidoException("No puedes crear este congreso, vuelve a iniciar sesión");
+        
+        Congreso congreso = new Congreso();
+        
+        congreso.setNombre(nombre);
+        congreso.setCreador(creador);
+        congreso.setPrecio(Double.parseDouble(precioStr));
+        congreso.setConvocando("true".equals(convocandoStr));
+        congreso.setFechaInicio(LocalDate.parse(fechaInicioStr));
+        congreso.setFechaFin(StringUtils.isBlank(fechaFinStr) ? null : LocalDate.parse(fechaFinStr));
+        congreso.setDescripcion(descripcion);
+        congreso.setActivado(true);
+        congreso.setInstalacionId(instalacionIdStr);
+        
+        return congreso;
     }
+
+    private boolean nombreCongresoValido(String nombre) {
+        return true;
+    }
+
+    private boolean precioValido(String precioStr) {
+        return true;
+    }
+
+    private boolean convocacionValida(String convocandoStr) {
+        return true;
+    }
+
+    private boolean fechaInicioValida(String fechaInicioStr) {
+        return true;
+    }
+
+    private boolean fechaFinValida(String fechaFinStr) {
+        return true;
+    }
+
+    private boolean instalacionValida(String instalacionIdStr) {
+        return true;
+    }
+
+    private boolean creadorValido(String creador) {
+        return true;
+    }
+    
+    
     
 }

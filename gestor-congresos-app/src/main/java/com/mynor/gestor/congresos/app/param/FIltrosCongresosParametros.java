@@ -14,16 +14,15 @@ import java.util.Map;
  *
  * @author mynordma
  */
-public class FIltrosCongresosParametros implements RequestParseador {
+public class FIltrosCongresosParametros extends Validador implements EntidadParseador<Map> {
     
-    private String institucion;
-    private String fechaInicial;
-    private String fechaFinal;
-    private String nombre;
-    private String creador;
+    private final String institucion;
+    private final String fechaInicial;
+    private final String fechaFinal;
+    private final String nombre;
+    private final String creador;
 
-    @Override
-    public void asignarValoresDesdeRequest(HttpServletRequest request) {
+    public FIltrosCongresosParametros(HttpServletRequest request) {
         institucion    = request.getParameter("institucion");
         fechaInicial   = request.getParameter("fechaInicial");
         fechaFinal = request.getParameter("fechaFinal");
@@ -31,7 +30,8 @@ public class FIltrosCongresosParametros implements RequestParseador {
         creador = request.getParameter("creador");
     }
 
-    public Map<String, String> toFiltrosCongresos() throws FiltrosInvalidosException {
+    @Override
+    public Map<String, String> toEntidad() throws FiltrosInvalidosException {
         if(!institucionValida(institucion)) throw new FiltrosInvalidosException("Institucion inválida");
         if(!fechaInicialValida(fechaInicial)) throw new FiltrosInvalidosException("FIltro inválioa");
         if(!fechaFinalValida(fechaFinal)) throw new FiltrosInvalidosException("Filtro inválido"); // modificar

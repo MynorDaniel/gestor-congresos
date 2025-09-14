@@ -14,20 +14,20 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author mynordma
  */
-public class InstalacionParametros implements RequestParseador {
+public class InstalacionParametros extends Validador implements EntidadParseador<Instalacion> {
     
-    private String nombre;
-    private String ubicacion;
-    private String[] salones;
+    private final String nombre;
+    private final String ubicacion;
+    private final String[] salones;
 
-    @Override
-    public void asignarValoresDesdeRequest(HttpServletRequest request) {
+    public InstalacionParametros(HttpServletRequest request){
         nombre = request.getParameter("nombre");
         ubicacion = request.getParameter("ubicacion");
         salones = request.getParameterValues("salones[]");
     }
 
-    public Instalacion toInstalacion() throws InstalacionInvalidaException {
+    @Override
+    public Instalacion toEntidad() throws InstalacionInvalidaException {
         if(!nombreValido(nombre)) throw new InstalacionInvalidaException("El nombre debe tener una longitud menor o igual a 200");
         if(!ubicacionValida(ubicacion)) throw new InstalacionInvalidaException("La ubicacion no puede estar vacía");
         if(salones == null) throw new InstalacionInvalidaException("Ingresa al menos un salón");

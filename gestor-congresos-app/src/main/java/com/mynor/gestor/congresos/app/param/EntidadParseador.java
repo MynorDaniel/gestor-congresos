@@ -4,6 +4,8 @@
  */
 package com.mynor.gestor.congresos.app.param;
 
+import com.mynor.gestor.congresos.app.excepcion.EntidadInvalidaException;
+
 /**
  *
  * @author mynordma
@@ -11,5 +13,6 @@ package com.mynor.gestor.congresos.app.param;
  */
 public interface EntidadParseador<T> {
     
-    public T toEntidad();
+    public T toEntidad() throws EntidadInvalidaException;
+    
 }

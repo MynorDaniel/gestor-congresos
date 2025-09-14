@@ -8,7 +8,7 @@ package com.mynor.gestor.congresos.app.excepcion;
  *
  * @author mynordma
  */
-public class UsuarioInvalidoException extends Exception {
+public class UsuarioInvalidoException extends EntidadInvalidaException {
 
     public UsuarioInvalidoException(String message) {
         super(message);

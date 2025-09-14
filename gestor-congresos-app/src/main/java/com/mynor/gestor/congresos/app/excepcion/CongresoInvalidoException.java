@@ -8,7 +8,7 @@ package com.mynor.gestor.congresos.app.excepcion;
  *
  * @author mynordma
  */
-public class CongresoInvalidoException extends Exception {
+public class CongresoInvalidoException extends EntidadInvalidaException {
 
     public CongresoInvalidoException(String message) {
         super(message);

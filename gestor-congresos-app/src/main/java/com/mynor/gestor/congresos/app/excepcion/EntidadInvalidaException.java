@@ -8,9 +8,9 @@ package com.mynor.gestor.congresos.app.excepcion;
  *
  * @author mynordma
  */
-public class InstalacionInvalidaException extends EntidadInvalidaException {
+public class EntidadInvalidaException extends Exception {
 
-    public InstalacionInvalidaException(String message) {
+    public EntidadInvalidaException(String message) {
         super(message);
     }
     

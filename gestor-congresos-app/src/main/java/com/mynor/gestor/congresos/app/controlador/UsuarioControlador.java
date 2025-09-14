@@ -32,9 +32,8 @@ public class UsuarioControlador extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            UsuarioParametros usuarioParam = new UsuarioParametros();
-            usuarioParam.asignarValoresDesdeRequest(request);
-            Usuario usuarioNuevo = usuarioParam.toUsuario();
+            UsuarioParametros usuarioParam = new UsuarioParametros(request);
+            Usuario usuarioNuevo = usuarioParam.toEntidad();
                         
             RegistroDeUsuario registro = new RegistroDeUsuario();
             Usuario usuarioRegistrado = registro.registrar(usuarioNuevo);

@@ -30,9 +30,8 @@ public class AutenticacionControlador extends HttpServlet {
             throws ServletException, IOException {
         
         try {
-            CredencialesLoginParametros credencialesParam = new CredencialesLoginParametros();
-            credencialesParam.asignarValoresDesdeRequest(request);
-            CredencialesLogin credenciales = credencialesParam.toCredencialesLogin();
+            CredencialesLoginParametros credencialesParam = new CredencialesLoginParametros(request);
+            CredencialesLogin credenciales = credencialesParam.toEntidad();
             
             Login login = new Login();
             Usuario usuarioLoguedo = login.loguear(credenciales);

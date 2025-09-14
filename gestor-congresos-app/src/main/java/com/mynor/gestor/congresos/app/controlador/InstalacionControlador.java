@@ -33,9 +33,8 @@ public class InstalacionControlador extends HttpServlet {
             throws ServletException, IOException {
         try {
 
-            InstalacionParametros instalacionParam = new InstalacionParametros();
-            instalacionParam.asignarValoresDesdeRequest(request);
-            Instalacion instalacion = instalacionParam.toInstalacion();
+            InstalacionParametros instalacionParam = new InstalacionParametros(request);
+            Instalacion instalacion = instalacionParam.toEntidad();
 
             ManejadorDeInstalaciones manejador = new ManejadorDeInstalaciones();
             manejador.crear(instalacion, (Usuario) request.getSession().getAttribute("usuarioSession"));
