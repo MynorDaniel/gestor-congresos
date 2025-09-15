@@ -28,12 +28,12 @@ public class InstalacionParametros extends Validador implements EntidadParseador
 
     @Override
     public Instalacion toEntidad() throws InstalacionInvalidaException {
-        if(!nombreValido(nombre)) throw new InstalacionInvalidaException("El nombre debe tener una longitud menor o igual a 200");
-        if(!ubicacionValida(ubicacion)) throw new InstalacionInvalidaException("La ubicacion no puede estar vacía");
+        if(!longitudValida(nombre, 200)) throw new InstalacionInvalidaException("El nombre debe tener una longitud menor o igual a 200");
+        if(StringUtils.isBlank(ubicacion)) throw new InstalacionInvalidaException("La ubicacion no puede estar vacía");
         if(salones == null) throw new InstalacionInvalidaException("Ingresa al menos un salón");
         
         for (String salon : salones) {
-            if(!nombreValido(salon)) throw new InstalacionInvalidaException("El nombre del salón debe tener una longitud menor o igual a 200");
+            if(!longitudValida(salon, 200)) throw new InstalacionInvalidaException("El nombre del salón debe tener una longitud menor o igual a 200");
         }
         
         Instalacion instalacion = new Instalacion();
@@ -51,15 +51,6 @@ public class InstalacionParametros extends Validador implements EntidadParseador
         instalacion.setSalones(salonesInstalacion);
         
         return instalacion;
-    }
-    
-    private boolean nombreValido(String nombre){
-        return !StringUtils.isBlank(nombre)
-                && nombre.trim().length() <= 200;
-    }
-    
-    private boolean ubicacionValida(String nombre){
-        return !StringUtils.isBlank(nombre);
     }
     
 }

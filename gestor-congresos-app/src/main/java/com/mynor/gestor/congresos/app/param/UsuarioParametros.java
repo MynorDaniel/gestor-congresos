@@ -32,10 +32,10 @@ public class UsuarioParametros extends Validador implements EntidadParseador<Usu
     @Override
     public Usuario toEntidad() throws UsuarioInvalidoException {
         if(!correoValido(correo)) throw new UsuarioInvalidoException("Correo inválido");
-        if(!claveValida(clave)) throw new UsuarioInvalidoException("La clave debe tener una longitud menor o igual a 100");
-        if(!IDValido(id)) throw new UsuarioInvalidoException("El id debe tener una longitud menor o igual a 30");
-        if(!nombreValido(nombre)) throw new UsuarioInvalidoException("El nombre debe tener una longitud menor o igual a 200");
-        if(!numeroValido(numero)) throw new UsuarioInvalidoException("Verifica que el numero sea correcto o que tenga una longitud menor o igual a 30");
+        if(StringUtils.isBlank(clave)) throw new UsuarioInvalidoException("Clave inválida");
+        if(!longitudValida(id, 30)) throw new UsuarioInvalidoException("El id debe tener una longitud menor o igual a 30");
+        if(!longitudValida(nombre, 200)) throw new UsuarioInvalidoException("El nombre debe tener una longitud menor o igual a 200");
+        if(!numeroTelefonicoValido(numero)) throw new UsuarioInvalidoException("Verifica que el numero sea correcto o que tenga una longitud menor o igual a 30");
         
         Usuario usuario = new Usuario();
         usuario.setCorreo(correo);
@@ -47,32 +47,10 @@ public class UsuarioParametros extends Validador implements EntidadParseador<Usu
         return usuario;
     }
     
-    private boolean IDValido(String id){
-        return !StringUtils.isBlank(id)
-                && id.trim().length() <= 30;
-    }
-    
-    private boolean nombreValido(String nombre){
-        return !StringUtils.isBlank(nombre)
-                && nombre.trim().length() <= 200;
-    }
-    
-    private boolean numeroValido(String numero){
+    private boolean numeroTelefonicoValido(String numero){
         return !StringUtils.isBlank(numero)
                 && numero.matches("^\\d+$")
                 && numero.trim().length() <= 30;
     }
-    
-    private boolean claveValida(String clave){
-        return !StringUtils.isBlank(clave)
-                && clave.trim().length() <= 100;
-    }
-    
-    private boolean correoValido(String correo){
-        return !StringUtils.isBlank(correo)
-                && correo.trim().length() <= 320
-                && correo.matches(".+@.+\\..+");
-    }
-    
     
 }

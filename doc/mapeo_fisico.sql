@@ -6,7 +6,7 @@ USE gestor_congresos;
 
 CREATE TABLE usuario (
     id VARCHAR(30),
-    clave VARCHAR(100) NOT NULL,
+    clave CHAR(64) NOT NULL,
     nombre VARCHAR(200) NOT NULL,
     numero VARCHAR(30) NOT NULL,
     activado BOOL DEFAULT 1,

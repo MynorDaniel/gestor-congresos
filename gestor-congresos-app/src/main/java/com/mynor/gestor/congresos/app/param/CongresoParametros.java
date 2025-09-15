@@ -38,13 +38,13 @@ public class CongresoParametros extends Validador implements EntidadParseador<Co
 
     @Override
     public Congreso toEntidad() throws CongresoInvalidoException {
-        if(!nombreCongresoValido(nombre)) throw new CongresoInvalidoException("Verifica que el nombre tenga una longitud menor o igual a 200");
-        if(!precioValido(precioStr)) throw new CongresoInvalidoException("Verifica que el precio sea un decimal positivo");
+        if(!longitudValida(nombre, 200)) throw new CongresoInvalidoException("Verifica que el nombre tenga una longitud menor o igual a 200");
+        if(!montoValido(precioStr)) throw new CongresoInvalidoException("Verifica que el precio sea un decimal positivo");
         if(!convocacionValida(convocandoStr)) throw new CongresoInvalidoException("Verifica que el valor de la convocatoria sea válido");
-        if(!fechaInicioValida(fechaStr)) throw new CongresoInvalidoException("Verifica que la fecha de inicio sea válida");
-        if(!fechaFinValida(fechaFinStr)) throw new CongresoInvalidoException("Verifica que la fecha de finalización sea válida");
-        if(!instalacionValida(instalacionIdStr)) throw new CongresoInvalidoException("Verifica que la instalación sea válida");
-        if(!creadorValido(creador)) throw new CongresoInvalidoException("No puedes crear este congreso, vuelve a iniciar sesión");
+        if(!fechaValida(fechaStr)) throw new CongresoInvalidoException("Verifica que la fecha de inicio sea válida");
+        if(!fechaValida(fechaFinStr)) throw new CongresoInvalidoException("Verifica que la fecha de finalización sea válida");
+        if(!esEnteroPositivo(instalacionIdStr)) throw new CongresoInvalidoException("Verifica que la instalación sea válida");
+        if(!longitudValida(creador, 30)) throw new CongresoInvalidoException("No puedes crear este congreso, vuelve a iniciar sesión");
         
         Congreso congreso = new Congreso();
         
@@ -60,35 +60,8 @@ public class CongresoParametros extends Validador implements EntidadParseador<Co
         
         return congreso;
     }
-
-    private boolean nombreCongresoValido(String nombre) {
-        return true;
-    }
-
-    private boolean precioValido(String precioStr) {
-        return true;
-    }
-
+    
     private boolean convocacionValida(String convocandoStr) {
-        return true;
+        return "true".equals(convocandoStr) || "false".equals(convocandoStr);
     }
-
-    private boolean fechaInicioValida(String fechaInicioStr) {
-        return true;
-    }
-
-    private boolean fechaFinValida(String fechaFinStr) {
-        return true;
-    }
-
-    private boolean instalacionValida(String instalacionIdStr) {
-        return true;
-    }
-
-    private boolean creadorValido(String creador) {
-        return true;
-    }
-    
-    
-    
 }

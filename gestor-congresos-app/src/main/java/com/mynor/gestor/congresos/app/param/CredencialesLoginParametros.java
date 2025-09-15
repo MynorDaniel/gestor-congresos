@@ -26,23 +26,12 @@ public class CredencialesLoginParametros extends Validador implements EntidadPar
     @Override
     public CredencialesLogin toEntidad() throws UsuarioInvalidoException {
         if(!correoValido(correo)) throw new UsuarioInvalidoException("Correo inválido");
-        if(!claveValida(clave)) throw new UsuarioInvalidoException("La clave debe tener una longitud menor o igual a 100");
+        if(StringUtils.isBlank(clave)) throw new UsuarioInvalidoException("Clave inválida");
         
         CredencialesLogin credenciales = new CredencialesLogin();
         credenciales.setCorreo(correo);
         credenciales.setClave(clave);
         
         return credenciales;
-    }
-    
-    private boolean claveValida(String clave){
-        return !StringUtils.isBlank(clave)
-                && clave.trim().length() <= 100;
-    }
-    
-    private boolean correoValido(String correo){
-        return !StringUtils.isBlank(correo)
-                && correo.trim().length() <= 320
-                && correo.matches(".+@.+\\..+");
     }
 }
