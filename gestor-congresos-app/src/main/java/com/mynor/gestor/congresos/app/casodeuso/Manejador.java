@@ -6,7 +6,9 @@ package com.mynor.gestor.congresos.app.casodeuso;
 
 import com.mynor.gestor.congresos.app.basededatos.UsuarioBD;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
+import com.mynor.gestor.congresos.app.modelo.FiltrosUsuario;
 import com.mynor.gestor.congresos.app.modelo.RolSistema;
+import com.mynor.gestor.congresos.app.modelo.Usuario;
 
 /**
  *
@@ -16,8 +18,11 @@ public class Manejador {
     
     protected boolean esAdminDeCongresos(String creador) throws AccesoDeDatosException {
         UsuarioBD usuarioBD = new UsuarioBD();
-        RolSistema rol = usuarioBD.obtenerRolDeUsuario(creador);
+        FiltrosUsuario filtros = new FiltrosUsuario();
+        filtros.setId(creador);
         
-        return rol == RolSistema.ADMIN_CONGRESOS;
+        Usuario usuario = usuarioBD.leer(filtros)[0];
+        
+        return usuario.getRol() == RolSistema.ADMIN_CONGRESOS;
     }
 }

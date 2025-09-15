@@ -16,6 +16,7 @@
 <body class="bg-light">
     <jsp:include page="/includes/header.jsp"/>
     <jsp:include page="/includes/error.jsp"/>
+    <jsp:include page="/includes/info.jsp"/>
 
     <div class="container mt-5">
         <h2 class="mb-4 text-center">Crear Congreso</h2>
@@ -49,11 +50,11 @@
             <!-- Fecha inicio -->
             <div class="mb-3">
                 <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
-                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required
+                <input type="date" class="form-control" id="fecha_inicio" name="fecha" required
                        value="${not empty requestScope.errorAtributo ? param.fecha_inicio : ''}">
             </div>
 
-            <!-- Fecha fin (opcional) -->
+            <!-- Fecha fin -->
             <div class="mb-3">
                 <label for="fecha_fin" class="form-label">Fecha de fin</label>
                 <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"

@@ -4,6 +4,8 @@
  */
 package com.mynor.gestor.congresos.app.modelo;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author mynordma
@@ -14,6 +16,24 @@ public class FiltrosCongreso extends Filtros {
     private String creador;
     private Integer instalacion;
     private String institucion;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
 
     public String getNombre() {
         return nombre;

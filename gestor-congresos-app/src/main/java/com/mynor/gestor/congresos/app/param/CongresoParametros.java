@@ -30,10 +30,10 @@ public class CongresoParametros extends Validador implements EntidadParseador<Co
         precioStr = request.getParameter("precio");
         convocandoStr = request.getParameter("convocando");
         fechaStr = request.getParameter("fecha");
-        fechaFinStr = request.getParameter("fecha_fin"); // opcional
+        fechaFinStr = request.getParameter("fecha_fin");
         descripcion = request.getParameter("descripcion");
         instalacionIdStr = request.getParameter("instalacion");
-        creador = ((Usuario) request.getSession(false)).getId();
+        creador = ((Usuario) request.getSession(false).getAttribute("usuarioSession")).getId();
     }
 
     @Override

@@ -43,6 +43,8 @@ public class ManejadorDeCongresos extends Manejador {
         CongresoBD congresoBD = new CongresoBD();
         FiltrosCongreso filtros = new FiltrosCongreso();
         filtros.setInstalacion(congresoNuevo.getInstalacionId());
+        filtros.setFechaInicio(congresoNuevo.getFechaInicio());
+        filtros.setFechaFin(congresoNuevo.getFechaFin());
         
         Congreso[] coincidencias = congresoBD.leer(filtros);
         

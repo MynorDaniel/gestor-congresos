@@ -15,8 +15,31 @@ import java.sql.*;
  */
 public class CongresoBD extends BaseDeDatos {
 
-    public Congreso crear(Congreso entidad) throws AccesoDeDatosException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Congreso crear(Congreso congreso) throws AccesoDeDatosException {
+        String sql = "INSERT INTO congreso(nombre, creador, precio, convocando, fecha, fecha_fin, descripcion, activado, instalacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        Connection conn = ConexionBD.getInstance().getConnection();  
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
+            
+            ps.setString(1, congreso.getNombre());
+            ps.setString(2, congreso.getCreador());
+            ps.setDouble(3, congreso.getPrecio());
+            ps.setBoolean(4, congreso.isConvocando());
+            ps.setDate(5, Date.valueOf(congreso.getFechaInicio()));
+            ps.setDate(6, Date.valueOf(congreso.getFechaFin()));
+            ps.setString(7, congreso.getDescripcion());
+            ps.setBoolean(8, congreso.isActivado());
+            ps.setInt(9, congreso.getInstalacionId());
+            
+            int filasAfectadas = ps.executeUpdate();
+                    
+            if(filasAfectadas < 1) throw new AccesoDeDatosException("Error en el servidor");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new AccesoDeDatosException("Error en el servidor");
+        }
+        
+        return congreso;
     }
     
 //    private String getSelectCongresosConJoins(Map<String, String> filtros){// EJ: SELECT * FROM congreso c JOIN usuario u ON c.creador = u.id JOIN afiliacion a ON u.id = a.usuario WHERE institucion = CUNOC AND fecha_inicio BETWEEN '2024-02-02' AND '2026-02-02'
@@ -47,6 +70,10 @@ public class CongresoBD extends BaseDeDatos {
             sql.append(" AND instalacion = ?");
         }
         
+        if(filtros.getFechaInicio() != null && filtros.getFechaFin() != null){
+            sql.append(" AND fecha BETWEEN ? AND ?");
+        }
+        
         Connection conn = ConexionBD.getInstance().getConnection();
         try (PreparedStatement ps = conn.prepareStatement(
                 sql.toString(),
@@ -64,7 +91,15 @@ public class CongresoBD extends BaseDeDatos {
             }
             if (filtros.getInstalacion() != null) {
                 ps.setInt(i, filtros.getInstalacion());
-                //i++;
+                i++;
+            }
+            
+            if(filtros.getFechaInicio() != null && filtros.getFechaFin() != null){
+                ps.setDate(i, Date.valueOf(filtros.getFechaInicio()));
+                i++;
+                
+                ps.setDate(i, Date.valueOf(filtros.getFechaFin()));
+                i++;
             }
 
             ResultSet rs = ps.executeQuery();

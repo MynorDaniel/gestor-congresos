@@ -5,10 +5,13 @@
 package com.mynor.gestor.congresos.app.controlador;
 
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeCongresos;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstalaciones;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.CongresoInvalidoException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
+import com.mynor.gestor.congresos.app.modelo.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Usuario;
 import com.mynor.gestor.congresos.app.param.CongresoParametros;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -73,11 +76,30 @@ public class CongresoControlador extends HttpServlet {
             Congreso congresoCreado = manejador.crearCongreso(congresoNuevo);
             
             request.setAttribute("infoAtributo", "Congreso " + congresoCreado.getNombre() + " registrado con éxito");
-            request.getRequestDispatcher("congresos/crear-congreso.jsp").forward(request, response);
+
+            try {
+                ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
+                Instalacion[] instalaciones = manejadorInstalaciones.obtenerInstalaciones((Usuario) request.getSession().getAttribute("usuarioSession"));
+
+                request.setAttribute("instalacionesAtributo", instalaciones);
+                request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
+            } catch (AccesoDeDatosException | UsuarioInvalidoException ex2) {
+                request.setAttribute("errorAtributo", ex2.getMessage());
+                request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
+            }
             
         } catch (CongresoInvalidoException | UsuarioInvalidoException | AccesoDeDatosException ex) {
             request.setAttribute("errorAtributo", ex.getMessage());
-            request.getRequestDispatcher("congresos/crear-congreso.jsp").forward(request, response);
+            try {
+                ManejadorDeInstalaciones manejador = new ManejadorDeInstalaciones();
+                Instalacion[] instalaciones = manejador.obtenerInstalaciones((Usuario) request.getSession().getAttribute("usuarioSession"));
+
+                request.setAttribute("instalacionesAtributo", instalaciones);
+                request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
+            } catch (AccesoDeDatosException | UsuarioInvalidoException ex2) {
+                request.setAttribute("errorAtributo", ex2.getMessage());
+                request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
+            }
         }
     }
 

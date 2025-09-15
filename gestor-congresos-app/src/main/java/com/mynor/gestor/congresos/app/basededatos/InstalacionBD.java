@@ -82,7 +82,7 @@ public class InstalacionBD extends BaseDeDatos {
         String sql = "SELECT * FROM instalacion";
         
         Connection conn = ConexionBD.getInstance().getConnection();
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             
             ResultSet rs = ps.executeQuery();
 

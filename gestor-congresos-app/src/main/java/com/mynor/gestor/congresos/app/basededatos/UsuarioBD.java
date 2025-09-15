@@ -26,7 +26,7 @@ public class UsuarioBD extends BaseDeDatos {
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         Connection conn = ConexionBD.getInstance().getConnection();  
-        try(PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             
             ps.setString(1, usuario.getId());
             ps.setString(2, usuario.getClave());
@@ -46,40 +46,6 @@ public class UsuarioBD extends BaseDeDatos {
         
         return usuario;
     }
-    
-//    public Usuario[] leer(Map<String, String> filtros) throws AccesoDeDatosException {
-//        String sql = getSelect("usuario", filtros);
-//        
-//        Connection conn = ConexionBD.getInstance().getConnection();
-//        try(PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
-//            
-//            asignarValoresAPreparedStatement(ps, filtros.values().toArray(String[]::new));
-//            ResultSet rs = ps.executeQuery();
-//            
-//            Usuario[] usuarios = new Usuario[obtenerLongitudDeResultSet(rs)];
-//            
-//            int j = 0;
-//            while(rs.next()){
-//                Usuario usuario = new Usuario();
-//                
-//                usuario.setId(rs.getString("id"));
-//                usuario.setNombre(rs.getString("nombre"));
-//                usuario.setActivado(rs.getBoolean("activado"));
-//                usuario.setCorreo(rs.getString("correo"));
-//                usuario.setRol(RolSistema.valueOf(rs.getString("rol_sistema")));
-//                //usuario.setFoto(foto);
-//
-//                usuarios[j] = usuario;
-//                j++;
-//            }
-//            
-//            return usuarios;
-//            
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//            throw new AccesoDeDatosException("Error en el servidor");
-//        }
-//    }
 
     public Usuario existe(CredencialesLogin credenciales) throws AccesoDeDatosException, UsuarioInvalidoException {
         String sql = "SELECT * FROM usuario WHERE correo = ? AND clave = ? AND activado = 1";
@@ -113,12 +79,58 @@ public class UsuarioBD extends BaseDeDatos {
         }
     }
 
-    public RolSistema obtenerRolDeUsuario(String creador) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public Usuario[] leer(FiltrosUsuario filtros) throws AccesoDeDatosException {
+        StringBuilder sql = new StringBuilder("SELECT * FROM usuario WHERE 1=1");
 
-    public Usuario[] leer(FiltrosUsuario filtroId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (filtros.getId()!= null) {
+            sql.append(" AND id = ?");
+        }
+        if (filtros.getCorreo() != null) {
+            sql.append(" AND correo = ?");
+        }
+        
+        Connection conn = ConexionBD.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(
+                sql.toString(),
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY)) {
+            
+            int i = 1;
+            if (filtros.getId() != null) {
+                ps.setString(i, filtros.getId());
+                i++;
+            }
+            if (filtros.getCorreo() != null) {
+                ps.setString(i, filtros.getCorreo());
+                i++;
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            Usuario[] usuarios = new Usuario[obtenerLongitudDeResultSet(rs)];
+            
+            int j = 0;
+            while(rs.next()){
+                Usuario usuario = new Usuario();
+                
+                usuario.setId(rs.getString("id"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setNumero(rs.getString("numero"));
+                usuario.setActivado(rs.getBoolean("activado"));
+                usuario.setCorreo(rs.getString("correo"));
+                usuario.setRol(RolSistema.valueOf(rs.getString("rol_sistema")));
+                //usuario.setFoto(foto);
+
+                usuarios[j] = usuario;
+                j++;
+            }
+
+            return usuarios;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new AccesoDeDatosException("Error en el servidor");
+        }
     }
     
 }
