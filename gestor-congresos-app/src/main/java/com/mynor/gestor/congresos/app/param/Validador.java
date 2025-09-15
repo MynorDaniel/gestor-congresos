@@ -18,16 +18,16 @@ public class Validador {
         try {
             LocalDate.parse(fechaStr);
             return true;
-        } catch (DateTimeParseException e) {
+        } catch (DateTimeParseException | NullPointerException e) {
             return false;
         }
     }
     
     protected boolean montoValido(String montoStr) {
         try {
-            Double.valueOf(montoStr);
-            return true;
-        } catch (NumberFormatException e) {
+            double monto = Double.parseDouble(montoStr);
+            return monto >= 0;
+        } catch (NumberFormatException | NullPointerException e) {
             return false;
         }
     }
@@ -41,7 +41,7 @@ public class Validador {
         try {
             int entero = Integer.parseInt(valor);
             return entero >= 0;
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | NullPointerException e) {
             return false;
         }
     }

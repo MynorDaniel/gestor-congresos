@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author mynordma
  */
-@WebServlet(name = "CerrarSesionControlador", urlPatterns = {"/CerrarSesionControlador"})
+@WebServlet(name = "CerrarSesionControlador", urlPatterns = {"/cerrar-sesion"})
 public class CerrarSesionControlador extends HttpServlet {
 
     @Override

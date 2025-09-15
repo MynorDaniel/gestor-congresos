@@ -23,11 +23,16 @@ public class UsuarioBD extends BaseDeDatos {
     
     public Usuario crear(Usuario usuario) throws AccesoDeDatosException {
         String sql = "INSERT INTO usuario(id, clave, nombre, numero, activado, correo, rol_sistema) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
-        Connection conn = ConexionBD.getInstance().getConnection();  
-        try(PreparedStatement ps = conn.prepareStatement(sql)){
-            
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sqlCartera = "INSERT INTO cartera(usuario) VALUES(?)";
+
+        Connection conn = ConexionBD.getInstance().getConnection();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             PreparedStatement ps2 = conn.prepareStatement(sqlCartera)) {
+
+            conn.setAutoCommit(false);
+
             ps.setString(1, usuario.getId());
             ps.setString(2, usuario.getClave());
             ps.setString(3, usuario.getNombre());
@@ -35,17 +40,38 @@ public class UsuarioBD extends BaseDeDatos {
             ps.setBoolean(5, usuario.isActivado());
             ps.setString(6, usuario.getCorreo());
             ps.setString(7, usuario.getRol().name());
-            
+
+            ps2.setString(1, usuario.getId());
+
             int filasAfectadas = ps.executeUpdate();
-                    
-            if(filasAfectadas < 1) throw new AccesoDeDatosException("Error en el servidor");
+            int filasAfectadas2 = ps2.executeUpdate();
+
+            if (filasAfectadas < 1 || filasAfectadas2 < 1) {
+                conn.rollback();
+                throw new AccesoDeDatosException("Error en el servidor");
+            }
+
+            conn.commit();
+
+            return usuario;
+
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                System.out.println("Error al hacer rollback: " + ex.getMessage());
+            }
             throw new AccesoDeDatosException("Error en el servidor");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+                throw new AccesoDeDatosException("Error en el servidor");
+            }
         }
-        
-        return usuario;
     }
+
 
     public Usuario existe(CredencialesLogin credenciales) throws AccesoDeDatosException, UsuarioInvalidoException {
         String sql = "SELECT * FROM usuario WHERE correo = ? AND clave = ? AND activado = 1";

@@ -42,14 +42,12 @@
                         if (rol == RolSistema.PARTICIPANTE) {
                 %>
                         <!-- Header Participante -->
-                        <li class="nav-item"><a class="nav-link" href="#">Cartera digital</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Mis inscripciones</a></li>
                        
                 <%
                         } else if (rol == RolSistema.ADMIN_CONGRESOS) {
                 %>
                         <!-- Header Congresos -->
-                        <li class="nav-item"><a class="nav-link" href="#">Cartera digital</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Mis inscripciones</a></li>
                         <li class="nav-item">
                             <a class="nav-link" 
@@ -64,7 +62,6 @@
                         } else if (rol == RolSistema.ADMIN_SISTEMA) {
                 %>
                         <!-- Header Admin -->
-                        <li class="nav-item"><a class="nav-link" href="#">Cartera digital</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Mis inscripciones</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Comisión</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Instituciones</a></li>
@@ -84,14 +81,11 @@
                 <%
                         }
                 %>
-                        <li class="nav-item">
-                            <span class="navbar-text text-white ms-3">
-                                Bienvenido, <%= usuarioSession.getNombre() %>
-                            </span>
-                        </li>
+                        
+                        <li class="nav-item"><a class="nav-link" href="${pageContext.servletContext.contextPath}/cartera">Cartera digital</a></li>
                         
                         <li class="nav-item">
-                            <form action="${pageContext.servletContext.contextPath}/CerrarSesionControlador" method="post" class="d-inline">
+                            <form action="${pageContext.servletContext.contextPath}/cerrar-sesion" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-danger">Cerrar sesión</button>
                             </form>
                         </li>

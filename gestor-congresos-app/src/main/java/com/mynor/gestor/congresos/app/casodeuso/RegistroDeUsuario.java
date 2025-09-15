@@ -29,7 +29,7 @@ public class RegistroDeUsuario {
         
         // Verificar que el correo no exista
         FiltrosUsuario filtroCorreo = new FiltrosUsuario();
-        filtroId.setCorreo(usuarioNuevo.getCorreo());
+        filtroCorreo.setCorreo(usuarioNuevo.getCorreo());
         
         Usuario[] coincidenciasCorreo = usuarioBD.leer(filtroCorreo);
         if(coincidenciasCorreo.length > 0) throw new UsuarioInvalidoException("Correo en uso");
