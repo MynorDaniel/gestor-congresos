@@ -6,7 +6,9 @@ package com.mynor.gestor.congresos.app.param;
 
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
+import com.mynor.gestor.congresos.app.seguridad.Seguridad;
 import jakarta.servlet.http.HttpServletRequest;
+import java.security.NoSuchAlgorithmException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -37,9 +39,16 @@ public class UsuarioParametros extends Validador implements EntidadParseador<Usu
         if(!longitudValida(nombre, 200)) throw new UsuarioInvalidoException("El nombre debe tener una longitud menor o igual a 200");
         if(!numeroTelefonicoValido(numero)) throw new UsuarioInvalidoException("Verifica que el numero sea correcto o que tenga una longitud menor o igual a 30");
         
+        Seguridad seguridad = new Seguridad();
+        
         Usuario usuario = new Usuario();
         usuario.setCorreo(correo);
-        usuario.setClave(clave);
+        try {
+            usuario.setClave(seguridad.hashear(clave));
+        } catch (NoSuchAlgorithmException ex) {
+            System.out.println(ex.getMessage());
+            throw new UsuarioInvalidoException("Error al guardar la clave");
+        }
         usuario.setId(id);
         usuario.setNombre(nombre);
         usuario.setNumero(numero);
