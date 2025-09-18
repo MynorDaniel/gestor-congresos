@@ -1,0 +1,61 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
+package com.mynor.gestor.congresos.app.controlador;
+
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeCongresos;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInscripciones;
+import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
+import com.mynor.gestor.congresos.app.excepcion.InscripcionInvalidaException;
+import com.mynor.gestor.congresos.app.modelo.Congreso;
+import com.mynor.gestor.congresos.app.modelo.Inscripcion;
+import com.mynor.gestor.congresos.app.param.InscripcionParametros;
+import java.io.IOException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author mynordma
+ */
+@WebServlet(name = "ConfirmarPagoControlador", urlPatterns = {"/confirmar-pago"})
+public class ConfirmarPagoControlador extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            InscripcionParametros inscripcionParam = new InscripcionParametros(request);
+            Inscripcion inscripcion = inscripcionParam.toEntidad();
+            
+            ManejadorDeInscripciones manejador = new ManejadorDeInscripciones();
+            
+            ManejadorDeCongresos manejadorCongresos = new ManejadorDeCongresos();
+            Congreso congreso = manejadorCongresos.obtenerCongreso(inscripcion.getCongresoNombre());
+            request.setAttribute("congreso", congreso);
+            
+            if(manejador.existeInscripcion(inscripcion)){
+                System.out.println("existe");
+                request.setAttribute("infoAtributo", "Ya estas inscrito a este congreso");
+                request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
+            }else{
+                System.out.println("no existe");
+                request.getRequestDispatcher("inscripciones/confirmar-pago.jsp").forward(request, response);
+            }
+        } catch (AccesoDeDatosException | InscripcionInvalidaException e) {
+            System.out.println(e.getMessage());
+            request.setAttribute("errorAtributo", e.getMessage());
+            request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
+        }
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    }
+
+}

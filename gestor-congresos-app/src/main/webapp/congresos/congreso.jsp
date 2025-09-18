@@ -17,9 +17,8 @@
 
     <jsp:include page="/includes/header.jsp"/>
     <jsp:include page="/includes/error.jsp"/>
+    <jsp:include page="/includes/info.jsp"/>
     <div class="container mt-4">
-
-       
 
         <c:if test="${not empty congreso}">
             <div class="card shadow-sm p-3 mb-4">
@@ -35,6 +34,8 @@
                 <p><strong>Fin:</strong> <c:out value="${congreso.fechaFin}"/></p>
                 <p><strong>Descripción:</strong> <c:out value="${congreso.descripcion != null ? congreso.descripcion : '-'}"/></p>
                 
+                <a href="${pageContext.servletContext.contextPath}/confirmar-pago?congreso=${congreso.nombre}&usuario=${sessionScope.usuarioSession.id}" class="btn btn-secondary">Inscribirse</a>
+
             </div>
         </c:if>
 
