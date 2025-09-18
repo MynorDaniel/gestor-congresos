@@ -149,7 +149,7 @@ CREATE TABLE configuracion_pago (
 
 INSERT INTO usuario VALUES ('0', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'sistema', '0', 1, null, '0@0.0', 'ADMIN_SISTEMA');
 INSERT INTO cartera (usuario) VALUES ('0');
-
+INSERT INTO configuracion_pago(tipo, valor) VALUES('comision', 0.1);
 
 
 

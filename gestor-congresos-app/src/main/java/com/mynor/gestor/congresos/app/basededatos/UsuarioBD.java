@@ -59,7 +59,7 @@ public class UsuarioBD extends BaseDeDatos {
             try {
                 conn.rollback();
             } catch (SQLException ex) {
-                System.out.println("Error al hacer rollback: " + ex.getMessage());
+                System.out.println(ex.getMessage());
             }
             throw new AccesoDeDatosException("Error en el servidor");
         } finally {
