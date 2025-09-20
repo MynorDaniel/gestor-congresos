@@ -42,21 +42,7 @@ public class CongresoBD extends BaseDeDatos {
         return congreso;
     }
     
-//    private String getSelectCongresosConJoins(Map<String, String> filtros){// EJ: SELECT * FROM congreso c JOIN usuario u ON c.creador = u.id JOIN afiliacion a ON u.id = a.usuario WHERE institucion = CUNOC AND fecha_inicio BETWEEN '2024-02-02' AND '2026-02-02'
-//        StringBuilder query = new StringBuilder();
-//        query.append("SELECT * FROM congreso c JOIN usuario u ON c.creador = u.id JOIN afiliacion a ON u.id = a.usuario WHERE 1=1 ");
-//        
-//        if(filtros.containsKey("institucion")){
-//            query.append("AND institucion = ? ");
-//        }
-//        
-//        if(filtros.containsKey("fecha")){
-//            query.append("AND fecha BETWEEN ? AND ?");
-//        }
-//        
-//        return query.toString();
-//    }
-
+//  SELECT * FROM congreso c JOIN usuario u ON c.creador = u.id JOIN afiliacion a ON u.id = a.usuario WHERE institucion = CUNOC AND fecha_inicio BETWEEN '2024-02-02' AND '2026-02-02'
     public Congreso[] leer(FiltrosCongreso filtros) throws AccesoDeDatosException {
         StringBuilder sql = new StringBuilder("SELECT * FROM congreso WHERE 1=1");
 
@@ -116,6 +102,7 @@ public class CongresoBD extends BaseDeDatos {
                 congreso.setFechaFin(rs.getDate("fecha_fin").toLocalDate());
                 congreso.setDescripcion(rs.getString("descripcion"));
                 congreso.setActivado(rs.getBoolean("activado"));
+                congreso.setInstalacionId(rs.getInt("instalacion"));
 
                 congresos[j] = congreso;
                 j++;

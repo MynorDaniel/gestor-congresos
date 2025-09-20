@@ -48,6 +48,7 @@ CREATE TABLE actividad (
     hora_inicio TIME NOT NULL,
     hora_fin TIME NOT NULL,
     salon VARCHAR(200),
+    dia DATE NOT NULL,
     PRIMARY KEY (nombre, congreso),
     CONSTRAINT fk_congreso_actividad FOREIGN KEY (congreso) REFERENCES congreso (nombre),
     CONSTRAINT fk_salon_actividad FOREIGN KEY (salon) REFERENCES salon (nombre)

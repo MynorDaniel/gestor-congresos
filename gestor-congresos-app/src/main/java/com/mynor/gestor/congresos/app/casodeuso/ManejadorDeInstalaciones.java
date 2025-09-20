@@ -8,6 +8,7 @@ import com.mynor.gestor.congresos.app.basededatos.InstalacionBD;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Salon;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
 
 /**
@@ -19,6 +20,8 @@ public class ManejadorDeInstalaciones extends Manejador {
     public void crear(Instalacion instalacion, Usuario creador) throws AccesoDeDatosException, UsuarioInvalidoException {
         //Verificar que el rol sea administrador de congresos
         if(!super.esAdminDeCongresos(creador.getId())) throw new UsuarioInvalidoException("No tienes autorización para crear una instalacion");
+        
+        //Validar duplicidad
         
         //Crear la instalacion
         InstalacionBD instalacionBD = new InstalacionBD();
@@ -35,4 +38,8 @@ public class ManejadorDeInstalaciones extends Manejador {
         return instalacionBD.leer();
     }
     
+    public Salon[] obtenerSalones(int instalacionId) throws AccesoDeDatosException {
+        InstalacionBD instalacionBD = new InstalacionBD();
+        return instalacionBD.leerSalones(instalacionId);
+    }
 }

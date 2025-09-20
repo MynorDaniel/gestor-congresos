@@ -105,5 +105,34 @@ public class InstalacionBD extends BaseDeDatos {
             throw new AccesoDeDatosException("Error en el servidor");
         }
     }
+
+    public Salon[] leerSalones(int instalacionId) throws AccesoDeDatosException {
+        String sql = "SELECT nombre FROM salon WHERE instalacion = ?";
+        
+        Connection conn = ConexionBD.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            
+            ps.setInt(1, instalacionId);
+            
+            ResultSet rs = ps.executeQuery();
+
+            Salon[] salones = new Salon[obtenerLongitudDeResultSet(rs)];
+            int j = 0;
+            while (rs.next()) {
+                Salon salon = new Salon();
+                salon.setNombre(rs.getString("nombre"));
+                salon.setInstalacion(instalacionId);
+
+                salones[j] = salon;
+                j++;
+            }
+
+            return salones;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new AccesoDeDatosException("Error en el servidor");
+        }
+    }
     
 }

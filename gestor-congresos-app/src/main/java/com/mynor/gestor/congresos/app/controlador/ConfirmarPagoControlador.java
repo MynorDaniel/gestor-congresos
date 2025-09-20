@@ -4,10 +4,12 @@
  */
 package com.mynor.gestor.congresos.app.controlador;
 
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeActividades;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeCongresos;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInscripciones;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.InscripcionInvalidaException;
+import com.mynor.gestor.congresos.app.modelo.Actividad;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.modelo.Inscripcion;
 import com.mynor.gestor.congresos.app.param.InscripcionParametros;
@@ -39,6 +41,9 @@ public class ConfirmarPagoControlador extends HttpServlet {
             request.setAttribute("congreso", congreso);
             
             if(manejador.existeInscripcion(inscripcion)){
+                ManejadorDeActividades manejadorActividades = new ManejadorDeActividades();
+                Actividad[] actividades = manejadorActividades.obtenerPorCongreso(congreso.getNombre());
+                request.setAttribute("actividadesAtributo", actividades);
                 System.out.println("existe");
                 request.setAttribute("infoAtributo", "Ya estas inscrito a este congreso");
                 request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
@@ -47,9 +52,18 @@ public class ConfirmarPagoControlador extends HttpServlet {
                 request.getRequestDispatcher("inscripciones/confirmar-pago.jsp").forward(request, response);
             }
         } catch (AccesoDeDatosException | InscripcionInvalidaException e) {
-            System.out.println(e.getMessage());
-            request.setAttribute("errorAtributo", e.getMessage());
-            request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
+            try {
+                ManejadorDeActividades manejadorActividades = new ManejadorDeActividades();
+                Actividad[] actividades = manejadorActividades.obtenerPorCongreso(request.getParameter("congreso"));
+                request.setAttribute("actividadesAtributo", actividades);
+                System.out.println(e.getMessage());
+                request.setAttribute("errorAtributo", e.getMessage());
+                request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
+            } catch (AccesoDeDatosException ex) {
+                System.out.println(e.getMessage());
+                request.setAttribute("errorAtributo", ex.getMessage());
+                request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
+            }
         }
     }
     

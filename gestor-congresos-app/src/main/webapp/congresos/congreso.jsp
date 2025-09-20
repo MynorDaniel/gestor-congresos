@@ -37,7 +37,50 @@
                 
                 <a href="${pageContext.servletContext.contextPath}/confirmar-pago?congreso=${congreso.nombre}&usuario=${sessionScope.usuarioSession.id}&fecha=<%=LocalDate.now()%>" class="btn btn-secondary">Inscribirse</a>
 
+                <c:if test="${congreso.creador == sessionScope.usuarioSession.id}">
+                    <a href="congresos/editar?nombre=${congreso.nombre}" class="btn btn-secondary mt-3">Editar</a>
+                    <a href="${pageContext.servletContext.contextPath}/crear-actividad-form?congresoNombre=${congreso.nombre}" class="btn btn-secondary mt-3">Agregar actividad</a>
+                </c:if>
+                
             </div>
+                
+            <div class="container mt-4">
+                <h2>Actividades</h2>
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Salón</th>
+                            <th>Cupo</th>
+                            <th>Estado</th>
+                            <th>Tipo</th>
+                            <th>Hora inicio</th>
+                            <th>Hora fin</th>
+                            <th>Día</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="actividad" items="${actividadesAtributo}">
+                            <tr>
+                                <td>${actividad.nombre}</td>
+                                <td>${actividad.salonNombre}</td>
+                                <td>${actividad.cupo}</td>
+                                <td>${actividad.estado}</td>
+                                <td>${actividad.tipo}</td>
+                                <td>${actividad.horaInicio}</td>
+                                <td>${actividad.horaFin}</td>
+                                <td>${actividad.dia}</td>
+                                <td>
+                                    <a href="#" 
+                                       class="btn btn-sm btn-primary">Ver</a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+
         </c:if>
 
         <c:if test="${empty congreso}">

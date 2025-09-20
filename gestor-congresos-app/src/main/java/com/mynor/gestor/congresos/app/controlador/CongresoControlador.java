@@ -4,11 +4,13 @@
  */
 package com.mynor.gestor.congresos.app.controlador;
 
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeActividades;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeCongresos;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstalaciones;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.CongresoInvalidoException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
+import com.mynor.gestor.congresos.app.modelo.Actividad;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.modelo.Instalacion;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
@@ -37,10 +39,13 @@ public class CongresoControlador extends HttpServlet {
             String creador = request.getParameter("creador");
 
             ManejadorDeCongresos manejador = new ManejadorDeCongresos();
+            ManejadorDeActividades manejadorActividades = new ManejadorDeActividades();
             
             if(!StringUtils.isBlank(nombre)){
                 Congreso congreso = manejador.obtenerCongreso(nombre);
                 request.setAttribute("congreso", congreso);
+                Actividad[] actividades = manejadorActividades.obtenerPorCongreso(congreso.getNombre());
+                request.setAttribute("actividadesAtributo", actividades);
                 
                 //pagina congreso
                 request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);

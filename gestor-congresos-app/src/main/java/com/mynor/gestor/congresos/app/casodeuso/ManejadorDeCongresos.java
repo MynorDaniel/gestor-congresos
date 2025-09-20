@@ -19,8 +19,13 @@ import java.time.LocalDate;
 public class ManejadorDeCongresos extends Manejador {
 
     public Congreso crearCongreso(Congreso congresoNuevo) throws CongresoInvalidoException, UsuarioInvalidoException, AccesoDeDatosException {
+        //Validar duplicidad
+        
         //Verificar el rol
         if(!esAdminDeCongresos(congresoNuevo.getCreador())) throw new UsuarioInvalidoException("No puedes crear congresos");
+        
+        //Verificar que el usuario tenga una institucion
+        //TO-DO
         
         //Verificar fechas logicas
         if(!fechasLogicas(congresoNuevo.getFechaInicio(), congresoNuevo.getFechaFin())) throw new UsuarioInvalidoException("La fecha inicial debe ser anterior a la fecha final");

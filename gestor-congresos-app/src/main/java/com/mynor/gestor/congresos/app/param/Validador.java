@@ -5,6 +5,7 @@
 package com.mynor.gestor.congresos.app.param;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,6 +18,15 @@ public class Validador {
     protected boolean fechaValida(String fechaStr){
         try {
             LocalDate.parse(fechaStr);
+            return true;
+        } catch (DateTimeParseException | NullPointerException e) {
+            return false;
+        }
+    }
+    
+    protected boolean horaValida(String horaStr){
+        try {
+            LocalTime.parse(horaStr);
             return true;
         } catch (DateTimeParseException | NullPointerException e) {
             return false;
