@@ -22,6 +22,7 @@ public class UsuarioParametros extends Validador implements EntidadParseador<Usu
     private final String nombre;
     private final String numero;
     private final String correo;
+    private final String institucionStr;
 
     public UsuarioParametros(HttpServletRequest request) {
         clave    = request.getParameter("clave");
@@ -29,6 +30,7 @@ public class UsuarioParametros extends Validador implements EntidadParseador<Usu
         id = request.getParameter("id");
         nombre   = request.getParameter("nombre");
         numero = request.getParameter("numero");
+        institucionStr = request.getParameter("institucion");
     }
 
     @Override
@@ -38,6 +40,7 @@ public class UsuarioParametros extends Validador implements EntidadParseador<Usu
         if(!longitudValida(id, 30)) throw new UsuarioInvalidoException("El id debe tener una longitud menor o igual a 30");
         if(!longitudValida(nombre, 200)) throw new UsuarioInvalidoException("El nombre debe tener una longitud menor o igual a 200");
         if(!numeroTelefonicoValido(numero)) throw new UsuarioInvalidoException("Verifica que el numero sea correcto o que tenga una longitud menor o igual a 30");
+        if(!esEnteroPositivo(institucionStr)) throw new UsuarioInvalidoException("Institución inválida");
         
         Seguridad seguridad = new Seguridad();
         
@@ -52,6 +55,7 @@ public class UsuarioParametros extends Validador implements EntidadParseador<Usu
         usuario.setId(id);
         usuario.setNombre(nombre);
         usuario.setNumero(numero);
+        usuario.setInstitucion(Integer.parseInt(institucionStr));
         
         return usuario;
     }

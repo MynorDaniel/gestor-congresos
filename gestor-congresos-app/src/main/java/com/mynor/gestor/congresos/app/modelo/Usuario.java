@@ -18,6 +18,15 @@ public class Usuario {
     private String correo;
     private byte[] foto;
     private RolSistema rol;
+    private int institucion;
+
+    public int getInstitucion() {
+        return institucion;
+    }
+
+    public void setInstitucion(int institucion) {
+        this.institucion = institucion;
+    }
 
     public RolSistema getRol() {
         return rol;

@@ -4,9 +4,11 @@
  */
 package com.mynor.gestor.congresos.app.controlador;
 
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstituciones;
 import com.mynor.gestor.congresos.app.casodeuso.RegistroDeUsuario;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
+import com.mynor.gestor.congresos.app.modelo.Institucion;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
 import com.mynor.gestor.congresos.app.param.UsuarioParametros;
 import java.io.IOException;
@@ -42,8 +44,18 @@ public class UsuarioControlador extends HttpServlet {
             request.getRequestDispatcher("index.jsp").forward(request, response);
             
         } catch (UsuarioInvalidoException | AccesoDeDatosException ex) {
+            System.out.println(ex.getMessage());
             request.setAttribute("errorAtributo", ex.getMessage());
-            request.getRequestDispatcher("usuario/registroUsuario.jsp").forward(request, response);
+            try {
+                ManejadorDeInstituciones manejadorInstituciones = new ManejadorDeInstituciones();
+                Institucion[] instituciones = manejadorInstituciones.obtenerTodas();
+                request.setAttribute("institucionesAtributo", instituciones);
+                request.getRequestDispatcher("usuario/registroUsuario.jsp").forward(request, response);
+
+            } catch (AccesoDeDatosException e) {
+                request.setAttribute("errorAtributo", e.getMessage());
+                request.getRequestDispatcher("usuario/registroUsuario.jsp").forward(request, response);
+            }
         }
     }
     

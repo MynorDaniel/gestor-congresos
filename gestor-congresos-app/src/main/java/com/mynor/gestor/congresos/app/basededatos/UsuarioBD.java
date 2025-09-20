@@ -25,11 +25,13 @@ public class UsuarioBD extends BaseDeDatos {
         String sql = "INSERT INTO usuario(id, clave, nombre, numero, activado, correo, rol_sistema) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         String sqlCartera = "INSERT INTO cartera(usuario) VALUES(?)";
+        String sqlAfiliacion = "INSERT INTO afiliacion (usuario, institucion) VALUES(?, ?)";
 
         Connection conn = ConexionBD.getInstance().getConnection();
 
         try (PreparedStatement ps = conn.prepareStatement(sql);
-             PreparedStatement ps2 = conn.prepareStatement(sqlCartera)) {
+             PreparedStatement ps2 = conn.prepareStatement(sqlCartera);
+             PreparedStatement ps3 = conn.prepareStatement(sqlAfiliacion)) {
 
             conn.setAutoCommit(false);
 
@@ -42,11 +44,15 @@ public class UsuarioBD extends BaseDeDatos {
             ps.setString(7, usuario.getRol().name());
 
             ps2.setString(1, usuario.getId());
+            
+            ps3.setString(1, usuario.getId());
+            ps3.setInt(2, usuario.getInstitucion());
 
             int filasAfectadas = ps.executeUpdate();
             int filasAfectadas2 = ps2.executeUpdate();
+            int filasAfectadas3 = ps3.executeUpdate();
 
-            if (filasAfectadas < 1 || filasAfectadas2 < 1) {
+            if (filasAfectadas < 1 || filasAfectadas2 < 1 || filasAfectadas3 < 1) {
                 conn.rollback();
                 throw new AccesoDeDatosException("Error en el servidor");
             }
@@ -61,6 +67,7 @@ public class UsuarioBD extends BaseDeDatos {
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
             }
+            System.out.println(e.getMessage());
             throw new AccesoDeDatosException("Error en el servidor");
         } finally {
             try {

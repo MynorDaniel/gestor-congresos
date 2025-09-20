@@ -30,7 +30,7 @@
                     if (usuarioSession == null) {
                 %>
                         <li class="nav-item">
-                            <a class="btn btn-outline-light me-2" href="${pageContext.servletContext.contextPath}/usuario/registroUsuario.jsp">Registrarse</a>
+                            <a class="btn btn-outline-light me-2" href="${pageContext.servletContext.contextPath}/registro">Registrarse</a>
                             <a class="btn btn-primary" href="${pageContext.servletContext.contextPath}/index.jsp">Iniciar Sesión</a>
                         </li>
                 <%

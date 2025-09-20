@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -46,6 +47,18 @@
                     <div class="mb-3">
                         <label for="numero" class="form-label">Número de Teléfono</label>
                         <input type="tel" class="form-control" id="numero" name="numero" required value="<%= request.getParameter("numero") != null ? request.getParameter("numero") : "" %>">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="institucion" class="form-label">Institución</label>
+                        <select class="form-select" id="institucion" name="institucion" required>
+                            <c:forEach var="inst" items="${institucionesAtributo}">
+                                <option value="${inst.id}" 
+                                    <c:if test="${param.institucion == inst.id}">selected</c:if>>
+                                    ${inst.nombre}
+                                </option>
+                            </c:forEach>
+                        </select>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">Registrar</button>
