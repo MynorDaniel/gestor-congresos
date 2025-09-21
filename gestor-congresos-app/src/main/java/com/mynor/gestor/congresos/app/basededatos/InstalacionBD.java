@@ -134,5 +134,31 @@ public class InstalacionBD extends BaseDeDatos {
             throw new AccesoDeDatosException("Error en el servidor");
         }
     }
+
+    public Instalacion leer(String nombreCongreso) throws AccesoDeDatosException {
+        String sql = "SELECT i.id, i.nombre, i.ubicacion FROM instalacion i JOIN congreso c ON i.id = c.instalacion WHERE c.nombre = ?";
+        
+        Connection conn = ConexionBD.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            
+            ps.setString(1, nombreCongreso);
+            
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Instalacion instalacion = new Instalacion();
+                instalacion.setId(rs.getInt("id"));
+                instalacion.setNombre(rs.getString("nombre"));
+                instalacion.setUbicacion(rs.getString("ubicacion"));
+                return instalacion;
+            }else{
+                throw new AccesoDeDatosException("Error en el servidor");
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new AccesoDeDatosException("Error en el servidor");
+        }
+    }
     
 }

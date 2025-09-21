@@ -8,10 +8,11 @@ package com.mynor.gestor.congresos.app.modelo;
  *
  * @author mynordma
  */
-public class Inscripcion {
+public class Participacion {
     
     private String usuarioId;
     private String congresoNombre;
+    private Rol rol;
     private Usuario usuario;
 
     public Usuario getUsuario() {
@@ -20,16 +21,6 @@ public class Inscripcion {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-    
-    private Pago pago;
-
-    public Pago getPago() {
-        return pago;
-    }
-
-    public void setPago(Pago pago) {
-        this.pago = pago;
     }
 
     public String getUsuarioId() {
@@ -47,5 +38,14 @@ public class Inscripcion {
     public void setCongresoNombre(String congresoNombre) {
         this.congresoNombre = congresoNombre;
     }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
+    
     
 }

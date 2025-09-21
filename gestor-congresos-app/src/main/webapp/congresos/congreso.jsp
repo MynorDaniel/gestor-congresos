@@ -3,10 +3,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%
-    Congreso congreso = (Congreso) request.getAttribute("congreso");
-%>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -22,25 +18,58 @@
     <div class="container mt-4">
 
         <c:if test="${not empty congreso}">
-            <div class="card shadow-sm p-3 mb-4">
+            <div class="card shadow-sm p-3 mb-4 bg-dark bg-gradient text-white">
                 <h2 class="card-title">${congreso.nombre}</h2>
                 <p><strong>Precio:</strong> $${congreso.precio}</p>
-                <p><strong>Convocando:</strong> 
+                <p><strong>Convocatoria:</strong> 
                     <c:choose>
-                        <c:when test="${congreso.convocando}">Sí</c:when>
-                        <c:otherwise>No</c:otherwise>
+                        <c:when test="${congreso.convocando}">Aceptando trabajos</c:when>
+                        <c:otherwise>Convocatoria de trabajos cerrada</c:otherwise>
                     </c:choose>
                 </p>
                 <p><strong>Inicio:</strong> ${congreso.fechaInicio}</p>
                 <p><strong>Fin:</strong> <c:out value="${congreso.fechaFin}"/></p>
                 <p><strong>Descripción:</strong> <c:out value="${congreso.descripcion != null ? congreso.descripcion : '-'}"/></p>
+                <p><strong>Ubicación:</strong> <c:out value="${instalacionAtributo.ubicacion != null ? instalacionAtributo.ubicacion : '-'}"/></p>
                 
-                <a href="${pageContext.servletContext.contextPath}/confirmar-pago?congreso=${congreso.nombre}&usuario=${sessionScope.usuarioSession.id}&fecha=<%=LocalDate.now()%>" class="btn btn-secondary">Inscribirse</a>
+                <c:set var="yaInscrito" value="false" />
+                <c:forEach var="inscripcion" items="${inscripcionesAtributo}">
+                    <c:if test="${inscripcion.usuario.id == sessionScope.usuarioSession.id}">
+                        <c:set var="yaInscrito" value="true" />
+                    </c:if>
+                </c:forEach>
+
+                <c:if test="${not yaInscrito}">
+                    <a href="${pageContext.servletContext.contextPath}/confirmar-pago?congreso=${congreso.nombre}&usuario=${sessionScope.usuarioSession.id}&fecha=<%=LocalDate.now()%>" 
+                       class="btn btn-secondary">Inscribirse</a>
+                </c:if>
 
                 <c:if test="${congreso.creador == sessionScope.usuarioSession.id}">
                     <a href="congresos/editar?nombre=${congreso.nombre}" class="btn btn-secondary mt-3">Editar</a>
                     <a href="${pageContext.servletContext.contextPath}/crear-actividad-form?congresoNombre=${congreso.nombre}" class="btn btn-secondary mt-3">Agregar actividad</a>
                 </c:if>
+                
+                <h2 class="mt-3">Comité científico</h2>
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID Usuario</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Número</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="participacion" items="${comiteAtributo}">
+                            <tr>
+                                <td>${participacion.usuario.id}</td>
+                                <td>${participacion.usuario.nombre}</td>
+                                <td>${participacion.usuario.correo}</td>
+                                <td>${participacion.usuario.numero}</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
                 
             </div>
                 
@@ -80,6 +109,31 @@
                     </tbody>
                 </table>
             </div>
+                
+            <div class="container my-4">
+                <h2 class="mb-3">Listado de Inscripciones</h2>
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID Usuario</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Número</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="inscripcion" items="${inscripcionesAtributo}">
+                            <tr>
+                                <td>${inscripcion.usuario.id}</td>
+                                <td>${inscripcion.usuario.nombre}</td>
+                                <td>${inscripcion.usuario.correo}</td>
+                                <td>${inscripcion.usuario.numero}</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+
 
         </c:if>
 

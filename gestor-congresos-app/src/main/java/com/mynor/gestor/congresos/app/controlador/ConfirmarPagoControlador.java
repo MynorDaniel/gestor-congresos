@@ -7,11 +7,15 @@ package com.mynor.gestor.congresos.app.controlador;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeActividades;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeCongresos;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInscripciones;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstalaciones;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeParticipaciones;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.InscripcionInvalidaException;
 import com.mynor.gestor.congresos.app.modelo.Actividad;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.modelo.Inscripcion;
+import com.mynor.gestor.congresos.app.modelo.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Participacion;
 import com.mynor.gestor.congresos.app.param.InscripcionParametros;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -46,6 +50,19 @@ public class ConfirmarPagoControlador extends HttpServlet {
                 request.setAttribute("actividadesAtributo", actividades);
                 System.out.println("existe");
                 request.setAttribute("infoAtributo", "Ya estas inscrito a este congreso");
+                
+                ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
+                Instalacion instalacion = manejadorInstalaciones.obtenerPorCongreso(congreso.getNombre());
+                request.setAttribute("instalacionAtributo", instalacion);
+                
+                ManejadorDeParticipaciones manejadorParticipaciones = new ManejadorDeParticipaciones();
+                Participacion[] comite = manejadorParticipaciones.obtenerComite(congreso.getNombre());
+                request.setAttribute("comiteAtributo", comite);
+                
+                ManejadorDeInscripciones manejadorInscripciones = new ManejadorDeInscripciones();
+                Inscripcion[] inscripciones = manejadorInscripciones.obtenerPorCongreso(congreso.getNombre());
+                request.setAttribute("inscripcionesAtributo", inscripciones);
+                
                 request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
             }else{
                 System.out.println("no existe");
@@ -58,6 +75,19 @@ public class ConfirmarPagoControlador extends HttpServlet {
                 request.setAttribute("actividadesAtributo", actividades);
                 System.out.println(e.getMessage());
                 request.setAttribute("errorAtributo", e.getMessage());
+                
+                ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
+                Instalacion instalacion = manejadorInstalaciones.obtenerPorCongreso(request.getParameter("congreso"));
+                request.setAttribute("instalacionAtributo", instalacion);
+                
+                ManejadorDeParticipaciones manejadorParticipaciones = new ManejadorDeParticipaciones();
+                Participacion[] comite = manejadorParticipaciones.obtenerComite(request.getParameter("congreso"));
+                request.setAttribute("comiteAtributo", comite);
+                
+                ManejadorDeInscripciones manejadorInscripciones = new ManejadorDeInscripciones();
+                Inscripcion[] inscripciones = manejadorInscripciones.obtenerPorCongreso(request.getParameter("congreso"));
+                request.setAttribute("inscripcionesAtributo", inscripciones);
+                
                 request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
             } catch (AccesoDeDatosException ex) {
                 System.out.println(e.getMessage());

@@ -6,13 +6,18 @@ package com.mynor.gestor.congresos.app.controlador;
 
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeActividades;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeCongresos;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInscripciones;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstalaciones;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeParticipaciones;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeUsuarios;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.CongresoInvalidoException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Actividad;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
+import com.mynor.gestor.congresos.app.modelo.Inscripcion;
 import com.mynor.gestor.congresos.app.modelo.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Participacion;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
 import com.mynor.gestor.congresos.app.param.CongresoParametros;
 import java.io.IOException;
@@ -41,11 +46,24 @@ public class CongresoControlador extends HttpServlet {
             ManejadorDeCongresos manejador = new ManejadorDeCongresos();
             ManejadorDeActividades manejadorActividades = new ManejadorDeActividades();
             
+            
             if(!StringUtils.isBlank(nombre)){
                 Congreso congreso = manejador.obtenerCongreso(nombre);
                 request.setAttribute("congreso", congreso);
                 Actividad[] actividades = manejadorActividades.obtenerPorCongreso(congreso.getNombre());
                 request.setAttribute("actividadesAtributo", actividades);
+                
+                ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
+                Instalacion instalacion = manejadorInstalaciones.obtenerPorCongreso(congreso.getNombre());
+                request.setAttribute("instalacionAtributo", instalacion);
+                
+                ManejadorDeParticipaciones manejadorParticipaciones = new ManejadorDeParticipaciones();
+                Participacion[] comite = manejadorParticipaciones.obtenerComite(congreso.getNombre());
+                request.setAttribute("comiteAtributo", comite);
+                
+                ManejadorDeInscripciones manejadorInscripciones = new ManejadorDeInscripciones();
+                Inscripcion[] inscripciones = manejadorInscripciones.obtenerPorCongreso(congreso.getNombre());
+                request.setAttribute("inscripcionesAtributo", inscripciones);
                 
                 //pagina congreso
                 request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
@@ -80,30 +98,44 @@ public class CongresoControlador extends HttpServlet {
             ManejadorDeCongresos manejador = new ManejadorDeCongresos();
             Congreso congresoCreado = manejador.crearCongreso(congresoNuevo);
             
-            request.setAttribute("infoAtributo", "Congreso " + congresoCreado.getNombre() + " registrado con éxito");
+            
 
             try {
                 ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
                 Instalacion[] instalaciones = manejadorInstalaciones.obtenerInstalaciones((Usuario) request.getSession().getAttribute("usuarioSession"));
-
+                
+                ManejadorDeUsuarios manejadorUsuarios = new ManejadorDeUsuarios();
+                Usuario[] usuarios = manejadorUsuarios.obtenerTodos();
+                
+                request.setAttribute("usuariosAtributo", usuarios);
+                request.setAttribute("infoAtributo", "Congreso " + congresoCreado.getNombre() + " registrado con éxito");
                 request.setAttribute("instalacionesAtributo", instalaciones);
-                request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
+                request.getRequestDispatcher("congresos/crear-congreso.jsp").forward(request, response);
             } catch (AccesoDeDatosException | UsuarioInvalidoException ex2) {
+                ManejadorDeUsuarios manejadorUsuarios = new ManejadorDeUsuarios();
+                Usuario[] usuarios = manejadorUsuarios.obtenerTodos();
+                
+                request.setAttribute("usuariosAtributo", usuarios);
                 request.setAttribute("errorAtributo", ex2.getMessage());
-                request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
+                request.getRequestDispatcher("congresos/crear-congreso.jsp").forward(request, response);
             }
             
         } catch (CongresoInvalidoException | UsuarioInvalidoException | AccesoDeDatosException ex) {
             request.setAttribute("errorAtributo", ex.getMessage());
             try {
+                ManejadorDeUsuarios manejadorUsuarios = new ManejadorDeUsuarios();
+                Usuario[] usuarios = manejadorUsuarios.obtenerTodos();
+                
+                request.setAttribute("usuariosAtributo", usuarios);
+                
                 ManejadorDeInstalaciones manejador = new ManejadorDeInstalaciones();
                 Instalacion[] instalaciones = manejador.obtenerInstalaciones((Usuario) request.getSession().getAttribute("usuarioSession"));
 
                 request.setAttribute("instalacionesAtributo", instalaciones);
-                request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
+                request.getRequestDispatcher("congresos/crear-congreso.jsp").forward(request, response);
             } catch (AccesoDeDatosException | UsuarioInvalidoException ex2) {
                 request.setAttribute("errorAtributo", ex2.getMessage());
-                request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
+                request.getRequestDispatcher("congresos/crear-congreso.jsp").forward(request, response);
             }
         }
     }

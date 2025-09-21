@@ -5,6 +5,7 @@
 package com.mynor.gestor.congresos.app.controlador;
 
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstalaciones;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeUsuarios;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Instalacion;
@@ -31,11 +32,28 @@ public class CrearCongresoControlador extends HttpServlet {
             ManejadorDeInstalaciones manejador = new ManejadorDeInstalaciones();
             Instalacion[] instalaciones = manejador.obtenerInstalaciones((Usuario) request.getSession().getAttribute("usuarioSession"));
             
+            Usuario usuarioActual = (Usuario) request.getSession().getAttribute("usuarioSession");
+            if(!manejador.esAdminDeCongresos(usuarioActual.getId())) throw new UsuarioInvalidoException("Sin permisos para crear un congreso");
+            
+            ManejadorDeUsuarios manejadorUsuarios = new ManejadorDeUsuarios();
+            Usuario[] usuarios = manejadorUsuarios.obtenerTodos();
+
+            request.setAttribute("usuariosAtributo", usuarios);
             request.setAttribute("instalacionesAtributo", instalaciones);
-            request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
+            request.getRequestDispatcher("congresos/crear-congreso.jsp").forward(request, response);
         } catch (AccesoDeDatosException | UsuarioInvalidoException ex) {
-            request.setAttribute("errorAtributo", ex.getMessage());
-            request.getRequestDispatcher("/congresos/crear-congreso.jsp").forward(request, response);
+            try {
+                ManejadorDeUsuarios manejadorUsuarios = new ManejadorDeUsuarios();
+                Usuario[] usuarios = manejadorUsuarios.obtenerTodos();
+                
+                request.setAttribute("usuariosAtributo", usuarios);
+                
+                request.setAttribute("errorAtributo", ex.getMessage());
+                request.getRequestDispatcher("congresos/crear-congreso.jsp").forward(request, response);
+            } catch (AccesoDeDatosException ex1) {
+                request.setAttribute("errorAtributo", ex1.getMessage());
+                request.getRequestDispatcher("congresos/crear-congreso.jsp").forward(request, response);
+            }
         }
     }
 

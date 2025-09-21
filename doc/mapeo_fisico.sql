@@ -84,14 +84,14 @@ CREATE TABLE inscripcion (
 );
 
 CREATE TABLE rol (
-    valor ENUM('ASISTENTE', 'TALLERISTA', 'PONENTE', 'PONENTE_INVITADO') NOT NULL,
+    valor ENUM('ASISTENTE', 'TALLERISTA', 'PONENTE', 'PONENTE_INVITADO', 'COMITE') NOT NULL,
     PRIMARY KEY (valor)
 );
 
 CREATE TABLE participacion (
     usuario VARCHAR(30),
     congreso VARCHAR(200),
-    rol ENUM('ASISTENTE', 'TALLERISTA', 'PONENTE', 'PONENTE_INVITADO') NOT NULL,
+    rol ENUM('ASISTENTE', 'TALLERISTA', 'PONENTE', 'PONENTE_INVITADO', 'COMITE') NOT NULL,
     PRIMARY KEY (usuario, congreso, rol),
     CONSTRAINT fk_usuario_participacion FOREIGN KEY (usuario) REFERENCES usuario (id),
     CONSTRAINT fk_congreso_participacion FOREIGN KEY (congreso) REFERENCES congreso (nombre),
@@ -153,5 +153,11 @@ INSERT INTO cartera (usuario) VALUES ('0');
 INSERT INTO configuracion_pago(tipo, valor) VALUES('comision', 0.1);
 INSERT INTO institucion (nombre) VALUES ('Code''n Bugs');
 
+INSERT INTO rol (valor) VALUES 
+('ASISTENTE'),
+('TALLERISTA'),
+('PONENTE'),
+('PONENTE_INVITADO'),
+('COMITE');
 
 

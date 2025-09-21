@@ -42,4 +42,9 @@ public class ManejadorDeInstalaciones extends Manejador {
         InstalacionBD instalacionBD = new InstalacionBD();
         return instalacionBD.leerSalones(instalacionId);
     }
+
+    public Instalacion obtenerPorCongreso(String nombreCongreso) throws AccesoDeDatosException {
+        InstalacionBD instalacionBD = new InstalacionBD();
+        return instalacionBD.leer(nombreCongreso);
+    }
 }

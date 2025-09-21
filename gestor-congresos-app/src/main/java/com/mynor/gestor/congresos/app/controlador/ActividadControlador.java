@@ -6,12 +6,17 @@ package com.mynor.gestor.congresos.app.controlador;
 
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeActividades;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeCongresos;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInscripciones;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstalaciones;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeParticipaciones;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.ActividadInvalidaException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Actividad;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
+import com.mynor.gestor.congresos.app.modelo.Inscripcion;
+import com.mynor.gestor.congresos.app.modelo.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Participacion;
 import com.mynor.gestor.congresos.app.modelo.Salon;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
 import com.mynor.gestor.congresos.app.param.ActividadParametros;
@@ -53,8 +58,21 @@ public class ActividadControlador extends HttpServlet {
             Actividad[] actividades = manejadorActividades.obtenerPorCongreso(congreso.getNombre());
             request.setAttribute("actividadesAtributo", actividades);
             
+            ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
+            Instalacion instalacion = manejadorInstalaciones.obtenerPorCongreso(congreso.getNombre());
+            request.setAttribute("instalacionAtributo", instalacion);
+
+            ManejadorDeParticipaciones manejadorParticipaciones = new ManejadorDeParticipaciones();
+            Participacion[] comite = manejadorParticipaciones.obtenerComite(congreso.getNombre());
+            request.setAttribute("comiteAtributo", comite);
+
             request.setAttribute("congreso", congreso);
             request.setAttribute("infoAtributo", "Actividad creada exitosamente");
+            
+            ManejadorDeInscripciones manejadorInscripciones = new ManejadorDeInscripciones();
+                Inscripcion[] inscripciones = manejadorInscripciones.obtenerPorCongreso(congreso.getNombre());
+                request.setAttribute("inscripcionesAtributo", inscripciones);
+            
             request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
             
         } catch (AccesoDeDatosException | ActividadInvalidaException | UsuarioInvalidoException e) {

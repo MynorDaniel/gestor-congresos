@@ -21,6 +21,23 @@ public class Congreso {
     private String descripcion;
     private boolean activado;
     private int instalacionId;
+    private Participacion[] comite;
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public Participacion[] getComite() {
+        return comite;
+    }
+
+    public void setComite(Participacion[] comite) {
+        this.comite = comite;
+    }
 
     public int getInstalacionId() {
         return instalacionId;

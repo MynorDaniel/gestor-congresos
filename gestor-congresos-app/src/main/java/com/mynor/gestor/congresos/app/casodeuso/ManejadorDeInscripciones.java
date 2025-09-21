@@ -22,14 +22,19 @@ import com.mynor.gestor.congresos.app.modelo.Usuario;
  * @author mynordma
  */
 public class ManejadorDeInscripciones extends Manejador {
+    
+    private final InscripcionBD inscripcionBD;
 
-    public Inscripcion[] obtenerInscripciones(FiltrosInscripcion filtros, Usuario usuarioActual) throws UsuarioInvalidoException, AccesoDeDatosException {
+    public ManejadorDeInscripciones() {
+        this.inscripcionBD = new InscripcionBD();
+    }
+
+    public Inscripcion[] obtenerInscripcionesPropias(FiltrosInscripcion filtros, Usuario usuarioActual) throws UsuarioInvalidoException, AccesoDeDatosException {
         //Verificar que el usuario actual coincida con el filtro
         if(filtros.getUsuarioId() != null){
             if(!filtros.getUsuarioId().equals(usuarioActual.getId())) throw new UsuarioInvalidoException("No puedes ver estas inscripciones");
         }
         
-        InscripcionBD inscripcionBD = new InscripcionBD();
         return inscripcionBD.leer(filtros);
     }
 
@@ -38,7 +43,6 @@ public class ManejadorDeInscripciones extends Manejador {
         filtros.setUsuarioId(inscripcion.getUsuarioId());
         filtros.setCongresoNombre(inscripcion.getCongresoNombre());
         
-        InscripcionBD inscripcionBD = new InscripcionBD();
         Inscripcion[] coincidencias = inscripcionBD.leer(filtros);
         
         return coincidencias.length > 0;
@@ -59,7 +63,6 @@ public class ManejadorDeInscripciones extends Manejador {
         if(!fechaInscripcionValida(inscripcion, congreso)) throw new InscripcionInvalidaException("El congreso ya terminó");
         
         //Crear la inscripcion
-        InscripcionBD inscripcionBD = new InscripcionBD();
         inscripcion.getPago().setComisionCobrada(inscripcionBD.obtenerComision());
         inscripcion.getPago().setMonto(congreso.getPrecio());
         inscripcionBD.crear(inscripcion, congreso);
@@ -74,6 +77,21 @@ public class ManejadorDeInscripciones extends Manejador {
     
     private boolean fechaInscripcionValida(Inscripcion inscripcion, Congreso congreso) throws AccesoDeDatosException {
         return !inscripcion.getPago().getFecha().isAfter(congreso.getFechaFin());
+    }
+
+    public Inscripcion[] obtenerPorCongreso(String nombre) throws AccesoDeDatosException {
+        FiltrosInscripcion filtros = new FiltrosInscripcion();
+        filtros.setCongresoNombre(nombre);
+        
+        Inscripcion[] inscripciones = inscripcionBD.leer(filtros);
+        
+        ManejadorDeUsuarios manejadorUsuarios = new ManejadorDeUsuarios();
+        for (Inscripcion inscripcion : inscripciones) {
+            Usuario usuario = manejadorUsuarios.obtenerPorId(inscripcion.getUsuarioId());
+            inscripcion.setUsuario(usuario);
+        }
+        
+        return inscripciones;
     }
     
 }
