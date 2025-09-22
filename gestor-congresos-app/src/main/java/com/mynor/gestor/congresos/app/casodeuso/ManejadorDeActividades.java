@@ -18,6 +18,12 @@ import com.mynor.gestor.congresos.app.modelo.Salon;
  * @author mynordma
  */
 public class ManejadorDeActividades extends Manejador {
+    
+    private final ActividadBD actividadBD;
+
+    public ManejadorDeActividades() {
+        this.actividadBD = new ActividadBD();
+    }
 
     public void crear(Actividad actividad) throws AccesoDeDatosException, ActividadInvalidaException {        
         //Validar duplicidad
@@ -37,15 +43,17 @@ public class ManejadorDeActividades extends Manejador {
         //Validar que el salon no este ocupado
         if(salonOcupado(actividad)) throw new ActividadInvalidaException("Salón ocupado");
         
-        //Crear actividad
         //Asignar estado
-        actividad.setEstado(EstadoActividad.PENDIENTE);
-        ActividadBD actividadBD = new ActividadBD();
+        if(congreso.getCreador().equals(actividad.getAutorId())){
+            actividad.setEstado(EstadoActividad.APROBADA);
+        }else{
+            actividad.setEstado(EstadoActividad.PENDIENTE);
+        }
+        
         actividadBD.crear(actividad);
     }
 
     private boolean existeActividad(Actividad actividad) throws AccesoDeDatosException {
-        ActividadBD actividadBD = new ActividadBD();
         FiltrosActividad filtros = new FiltrosActividad();
         filtros.setCongresoNombre(actividad.getCongresoNombre());
         filtros.setNombre(actividad.getNombre());
@@ -77,8 +85,6 @@ public class ManejadorDeActividades extends Manejador {
     }
 
     private boolean salonOcupado(Actividad actividad) throws AccesoDeDatosException {
-        ActividadBD actividadBD = new ActividadBD();
-        
         FiltrosActividad filtros = new FiltrosActividad();
         filtros.setCongresoNombre(actividad.getCongresoNombre());
         filtros.setSalonNombre(actividad.getSalonNombre());
@@ -92,7 +98,6 @@ public class ManejadorDeActividades extends Manejador {
     }
 
     public Actividad[] obtenerPorCongreso(String nombreCongreso) throws AccesoDeDatosException {
-        ActividadBD actividadBD = new ActividadBD();
         FiltrosActividad filtros = new FiltrosActividad();
         filtros.setCongresoNombre(nombreCongreso);
         return actividadBD.leer(filtros);

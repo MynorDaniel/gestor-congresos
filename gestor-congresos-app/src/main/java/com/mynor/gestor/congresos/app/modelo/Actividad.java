@@ -24,6 +24,24 @@ public class Actividad {
     private LocalTime horaInicio;
     private LocalTime horaFin;
     private LocalDate dia;
+    private String autorId;
+    private EncargadoActividad[] encargados;
+
+    public EncargadoActividad[] getEncargados() {
+        return encargados;
+    }
+
+    public void setEncargados(EncargadoActividad[] encargados) {
+        this.encargados = encargados;
+    }
+
+    public String getAutorId() {
+        return autorId;
+    }
+
+    public void setAutorId(String autorId) {
+        this.autorId = autorId;
+    }
 
     public String getNombre() {
         return nombre;

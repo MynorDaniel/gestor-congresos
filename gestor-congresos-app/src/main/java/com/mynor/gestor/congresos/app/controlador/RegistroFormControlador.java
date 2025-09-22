@@ -5,8 +5,10 @@
 package com.mynor.gestor.congresos.app.controlador;
 
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstituciones;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeUsuarios;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.modelo.Institucion;
+import com.mynor.gestor.congresos.app.modelo.Usuario;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -25,6 +27,16 @@ public class RegistroFormControlador extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            
+            String rol = request.getParameter("rol");
+            if(rol != null){
+                request.setAttribute("rolRegistroAtributo", rol);
+                
+                //Obtener usuarios
+                ManejadorDeUsuarios manejadorUsuarios = new ManejadorDeUsuarios();
+                Usuario[] usuarios = manejadorUsuarios.obtenerTodos();
+                request.setAttribute("usuariosAtributo", usuarios);
+            }
             
             ManejadorDeInstituciones manejadorInstituciones = new ManejadorDeInstituciones();
             Institucion[] instituciones = manejadorInstituciones.obtenerTodas();

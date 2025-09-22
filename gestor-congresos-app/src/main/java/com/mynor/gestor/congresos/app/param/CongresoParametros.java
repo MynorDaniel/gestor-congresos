@@ -102,6 +102,7 @@ public class CongresoParametros extends Validador implements EntidadParseador<Co
         }
         return true;
     }
+    
     protected boolean montoCongresoValido(String montoStr) {
         try {
             double monto = Double.parseDouble(montoStr);

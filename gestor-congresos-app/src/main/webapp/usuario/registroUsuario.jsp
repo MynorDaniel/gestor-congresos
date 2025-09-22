@@ -21,8 +21,35 @@
 
         <div class="container d-flex align-items-center justify-content-center vh-100">
             <div class="card shadow-lg p-4" style="width: 28rem;">
-                <h2 class="text-center mb-4">Registro de Usuario</h2>
-                <form action="${pageContext.servletContext.contextPath}/UsuarioControlador" method="post">
+                
+                <c:if test="${not empty rolRegistroAtributo and rolRegistroAtributo == 'ponente-invitado'}">
+                    <h2 class="text-center mb-4">Elige o registra un Ponente Invitado</h2>
+                    
+                    
+                    <form action="${pageContext.servletContext.contextPath}/participaciones" method="post">
+                        <div class="mb-3">
+                            <select class="form-select" id="usuario" name="usuarioExistenteId" required>
+                                <c:forEach var="usuario" items="${usuariosAtributo}">
+                                    <option value="${usuario.id}">${usuario.nombre} (${usuario.id})</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <input type="hidden" class="form-control" id="congreso" name="congreso" value="<%= request.getParameter("congreso") != null ? request.getParameter("congreso") : "" %>">
+                        <input type="hidden" class="form-control" id="rol" name="rol" value="<%= request.getParameter("rol") != null ? request.getParameter("rol") : "" %>">
+                        <button type="submit" class="btn btn-primary mb-5">Aceptar</button>
+                    </form>
+                    
+                    
+                    <form action="${pageContext.servletContext.contextPath}/participaciones" method="post">
+                    <input type="hidden" class="form-control" id="congreso" name="congreso" value="<%= request.getParameter("congreso") != null ? request.getParameter("congreso") : "" %>">
+                    <input type="hidden" class="form-control" id="rol" name="rol" value="<%= request.getParameter("rol") != null ? request.getParameter("rol") : "" %>">
+
+                </c:if>
+
+                <c:if test="${empty rolRegistroAtributo or rolRegistroAtributo != 'ponente-invitado'}">
+                    <h2 class="text-center mb-4">Registro de Participante</h2>
+                    <form action="${pageContext.servletContext.contextPath}/usuarios" method="post">
+                </c:if>
                     
                     <div class="mb-3">
                         <label for="id" class="form-label">Número de Identificación</label>

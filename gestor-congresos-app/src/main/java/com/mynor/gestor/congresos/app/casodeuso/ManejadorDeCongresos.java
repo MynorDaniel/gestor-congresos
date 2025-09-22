@@ -17,9 +17,16 @@ import java.time.LocalDate;
  * @author mynordma
  */
 public class ManejadorDeCongresos extends Manejador {
+    
+    private final CongresoBD congresoBD;
+    
+    public ManejadorDeCongresos(){
+        this.congresoBD = new CongresoBD();
+    }
 
     public Congreso crearCongreso(Congreso congresoNuevo) throws CongresoInvalidoException, UsuarioInvalidoException, AccesoDeDatosException {
         //Validar duplicidad
+        if(existeCongreso(congresoNuevo)) throw new CongresoInvalidoException("Ya existe un congreso con el mismo nombre");
         
         //Verificar el rol
         if(!esAdminDeCongresos(congresoNuevo.getCreador())) throw new UsuarioInvalidoException("No puedes crear congresos");
@@ -34,7 +41,6 @@ public class ManejadorDeCongresos extends Manejador {
         if(instalacionOcupada(congresoNuevo)) throw new UsuarioInvalidoException("La instalación esta siendo ocupada");
         
         //Crear el congreso
-        CongresoBD congresoBD = new CongresoBD();
         congresoBD.crear(congresoNuevo);
         
         return congresoNuevo;
@@ -45,7 +51,6 @@ public class ManejadorDeCongresos extends Manejador {
     }
 
     private boolean instalacionOcupada(Congreso congresoNuevo) throws AccesoDeDatosException {
-        CongresoBD congresoBD = new CongresoBD();
         FiltrosCongreso filtros = new FiltrosCongreso();
         filtros.setInstalacion(congresoNuevo.getInstalacionId());
         filtros.setFechaInicio(congresoNuevo.getFechaInicio());
@@ -57,22 +62,26 @@ public class ManejadorDeCongresos extends Manejador {
     }
 
     public Congreso obtenerCongreso(String nombre) throws AccesoDeDatosException {
-        CongresoBD congresoBD = new CongresoBD();
         FiltrosCongreso filtros = new FiltrosCongreso();
         filtros.setNombre(nombre);
         return congresoBD.leer(filtros)[0];
     }
 
     public Congreso[] obtenerCongresos(String creador) throws AccesoDeDatosException {
-        CongresoBD congresoBD = new CongresoBD();
         FiltrosCongreso filtros = new FiltrosCongreso();
         filtros.setCreador(creador);
         return congresoBD.leer(filtros);
     }
 
     public Congreso[] obtenerCongresos() throws AccesoDeDatosException {
-        CongresoBD congresoBD = new CongresoBD();
         return congresoBD.leer(new FiltrosCongreso());
+    }
+
+    private boolean existeCongreso(Congreso congresoNuevo) throws AccesoDeDatosException {
+        FiltrosCongreso filtros = new FiltrosCongreso();
+        filtros.setNombre(congresoNuevo.getNombre());
+        
+        return congresoBD.leer(filtros).length > 0;
     }
     
 }

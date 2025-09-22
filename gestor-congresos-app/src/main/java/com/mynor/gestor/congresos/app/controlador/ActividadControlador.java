@@ -70,8 +70,8 @@ public class ActividadControlador extends HttpServlet {
             request.setAttribute("infoAtributo", "Actividad creada exitosamente");
             
             ManejadorDeInscripciones manejadorInscripciones = new ManejadorDeInscripciones();
-                Inscripcion[] inscripciones = manejadorInscripciones.obtenerPorCongreso(congreso.getNombre());
-                request.setAttribute("inscripcionesAtributo", inscripciones);
+            Inscripcion[] inscripciones = manejadorInscripciones.obtenerPorCongreso(congreso.getNombre());
+            request.setAttribute("inscripcionesAtributo", inscripciones);
             
             request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
             
@@ -87,6 +87,10 @@ public class ActividadControlador extends HttpServlet {
 
                 request.setAttribute("congresoAtributo", congreso);
                 request.setAttribute("salonesAtributo", salones);
+                
+                ManejadorDeParticipaciones mp = new ManejadorDeParticipaciones();
+                Participacion[] posiblesEncargados = mp.obtenerPosiblesEncargados(congreso);
+                request.setAttribute("posiblesEncargadosAtributo", posiblesEncargados);
 
                 request.getRequestDispatcher("actividades/crear-actividad.jsp").forward(request, response);
 

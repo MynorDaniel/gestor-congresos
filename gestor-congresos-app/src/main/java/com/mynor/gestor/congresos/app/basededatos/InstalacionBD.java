@@ -35,7 +35,7 @@ public class InstalacionBD extends BaseDeDatos {
 
                 int filasAfectadas = ps.executeUpdate();
                 if (filasAfectadas < 1) {
-                    throw new AccesoDeDatosException("No se pudo guardar la instalación");
+                    throw new SQLException("No se pudo guardar la instalación");
                 }
 
                 try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -43,7 +43,7 @@ public class InstalacionBD extends BaseDeDatos {
                         int idGenerado = rs.getInt(1);
                         instalacion.setId(idGenerado);
                     } else {
-                        throw new AccesoDeDatosException("Error en el servidor");
+                        throw new SQLException("Error en el servidor");
                     }
                 }
             }

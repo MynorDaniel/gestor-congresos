@@ -16,15 +16,18 @@ import com.mynor.gestor.congresos.app.modelo.Usuario;
  * @author mynordma
  */
 public class ManejadorDeInstalaciones extends Manejador {
+    
+    private final InstalacionBD instalacionBD;
+
+    public ManejadorDeInstalaciones() {
+        this.instalacionBD = new InstalacionBD();
+    }
 
     public void crear(Instalacion instalacion, Usuario creador) throws AccesoDeDatosException, UsuarioInvalidoException {
         //Verificar que el rol sea administrador de congresos
         if(!super.esAdminDeCongresos(creador.getId())) throw new UsuarioInvalidoException("No tienes autorización para crear una instalacion");
         
-        //Validar duplicidad
-        
         //Crear la instalacion
-        InstalacionBD instalacionBD = new InstalacionBD();
         instalacionBD.crear(instalacion);
     }
 
@@ -34,17 +37,14 @@ public class ManejadorDeInstalaciones extends Manejador {
         
         //Verificar que no exista
         
-        InstalacionBD instalacionBD = new InstalacionBD();
         return instalacionBD.leer();
     }
     
     public Salon[] obtenerSalones(int instalacionId) throws AccesoDeDatosException {
-        InstalacionBD instalacionBD = new InstalacionBD();
         return instalacionBD.leerSalones(instalacionId);
     }
 
     public Instalacion obtenerPorCongreso(String nombreCongreso) throws AccesoDeDatosException {
-        InstalacionBD instalacionBD = new InstalacionBD();
         return instalacionBD.leer(nombreCongreso);
     }
 }

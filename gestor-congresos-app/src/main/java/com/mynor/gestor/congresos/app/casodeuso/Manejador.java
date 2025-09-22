@@ -14,7 +14,7 @@ import com.mynor.gestor.congresos.app.modelo.Usuario;
  *
  * @author mynordma
  */
-public class Manejador {
+public abstract class Manejador {
     
     public boolean esAdminDeCongresos(String creador) throws AccesoDeDatosException {
         UsuarioBD usuarioBD = new UsuarioBD();

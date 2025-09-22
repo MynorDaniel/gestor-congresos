@@ -6,6 +6,7 @@ package com.mynor.gestor.congresos.app.basededatos;
 
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.modelo.Actividad;
+import com.mynor.gestor.congresos.app.modelo.EncargadoActividad;
 import com.mynor.gestor.congresos.app.modelo.EstadoActividad;
 import com.mynor.gestor.congresos.app.modelo.FiltrosActividad;
 import com.mynor.gestor.congresos.app.modelo.TipoActividad;
@@ -87,6 +88,7 @@ public class ActividadBD extends BaseDeDatos {
                 actividad.setHoraInicio(rs.getTime("hora_inicio").toLocalTime());
                 actividad.setHoraFin(rs.getTime("hora_fin").toLocalTime());
                 actividad.setDia(rs.getDate("dia").toLocalDate());
+                actividad.setAutorId(rs.getString("autor"));
 
                 actividades[j] = actividad;
                 j++;
@@ -101,30 +103,80 @@ public class ActividadBD extends BaseDeDatos {
     }
 
     public void crear(Actividad actividad) throws AccesoDeDatosException {
-        String sql = "INSERT INTO actividad(nombre, congreso, cupo, estado, descripcion, tipo, hora_inicio, hora_fin, salon, dia) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO actividad(nombre, congreso, cupo, estado, descripcion, tipo, hora_inicio, hora_fin, salon, dia, autor) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlEncargo = "INSERT INTO encargado_actividad (usuario, actividad_nombre, actividad_congreso) "
+                + "VALUES (?, ?, ?)";
         
-        Connection conn = ConexionBD.getInstance().getConnection();  
-        try(PreparedStatement ps = conn.prepareStatement(sql)){
+        Connection conn = ConexionBD.getInstance().getConnection();
+        
+        try {
+            conn.setAutoCommit(false);
+            try(PreparedStatement ps = conn.prepareStatement(sql)){
             
-            ps.setString(1, actividad.getNombre());
-            ps.setString(2, actividad.getCongresoNombre());
-            ps.setInt(3, actividad.getCupo());
-            ps.setString(4, actividad.getEstado().name());
-            ps.setString(5, actividad.getDescripcion());
-            ps.setString(6, actividad.getTipo().name());
-            ps.setTime(7, Time.valueOf(actividad.getHoraInicio()));
-            ps.setTime(8, Time.valueOf(actividad.getHoraFin()));
-            ps.setString(9, actividad.getSalonNombre());
-            ps.setDate(10, Date.valueOf(actividad.getDia()));
+                ps.setString(1, actividad.getNombre());
+                ps.setString(2, actividad.getCongresoNombre());
+                ps.setInt(3, actividad.getCupo());
+                ps.setString(4, actividad.getEstado().name());
+                ps.setString(5, actividad.getDescripcion());
+                ps.setString(6, actividad.getTipo().name());
+                ps.setTime(7, Time.valueOf(actividad.getHoraInicio()));
+                ps.setTime(8, Time.valueOf(actividad.getHoraFin()));
+                ps.setString(9, actividad.getSalonNombre());
+                ps.setDate(10, Date.valueOf(actividad.getDia()));
+                ps.setString(11, actividad.getAutorId());
+
+                int filasAfectadas = ps.executeUpdate();
+
+                if(filasAfectadas < 1) throw new SQLException("Error en el servidor");
+            }
             
-            int filasAfectadas = ps.executeUpdate();
+            try(PreparedStatement ps2 = conn.prepareStatement(sqlEncargo)){
+                
+                ps2.setString(1, actividad.getAutorId());
+                ps2.setString(2, actividad.getNombre());
+                ps2.setString(3, actividad.getCongresoNombre());
+                
+                int filasAfectadas = ps2.executeUpdate();
+
+                if(filasAfectadas < 1) throw new SQLException("Error en el servidor");
+            }
+            
+            try (PreparedStatement ps = conn.prepareStatement(sqlEncargo)) {
+                for (EncargadoActividad e : actividad.getEncargados()) {
+                    if(!actividad.getAutorId().equals(e.getUsuario())){
+                        
+                        ps.setString(1, e.getUsuario());
+                        ps.setString(2, actividad.getNombre());
+                        ps.setString(3, actividad.getCongresoNombre());
+
+                        int filasAfectadas = ps.executeUpdate();
+                        if (filasAfectadas < 1) {
+                            conn.rollback();
+                            throw new SQLException("Error en el servidor");
+                        }
+                    }
                     
-            if(filasAfectadas < 1) throw new AccesoDeDatosException("Error en el servidor");
+                }
+            }
+            
+            conn.commit();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
             throw new AccesoDeDatosException("Error en el servidor");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
         }
+        
+        
     }
         
     

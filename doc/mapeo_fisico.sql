@@ -49,9 +49,11 @@ CREATE TABLE actividad (
     hora_fin TIME NOT NULL,
     salon VARCHAR(200),
     dia DATE NOT NULL,
+    autor VARCHAR(30),
     PRIMARY KEY (nombre, congreso),
     CONSTRAINT fk_congreso_actividad FOREIGN KEY (congreso) REFERENCES congreso (nombre),
-    CONSTRAINT fk_salon_actividad FOREIGN KEY (salon) REFERENCES salon (nombre)
+    CONSTRAINT fk_salon_actividad FOREIGN KEY (salon) REFERENCES salon (nombre),
+    CONSTRAINT fk_usuario_actividad FOREIGN KEY (autor) REFERENCES usuario (id)
 );
 
 CREATE TABLE cartera (
@@ -148,16 +150,17 @@ CREATE TABLE configuracion_pago (
     PRIMARY KEY (tipo)
 );
 
-INSERT INTO usuario VALUES ('0', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'sistema', '0', 1, null, '0@0.0', 'ADMIN_SISTEMA');
-INSERT INTO cartera (usuario) VALUES ('0');
-INSERT INTO configuracion_pago(tipo, valor) VALUES('comision', 0.1);
-INSERT INTO institucion (nombre) VALUES ('Code''n Bugs');
-
 INSERT INTO rol (valor) VALUES 
 ('ASISTENTE'),
 ('TALLERISTA'),
 ('PONENTE'),
 ('PONENTE_INVITADO'),
 ('COMITE');
+
+
+INSERT INTO usuario VALUES ('0', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'sistema', '0', 1, null, '0@0.0', 'ADMIN_SISTEMA');
+INSERT INTO cartera (usuario) VALUES ('0');
+INSERT INTO configuracion_pago(tipo, valor) VALUES('comision', 0.1);
+INSERT INTO institucion (nombre) VALUES ('Code''n Bugs');
 
 

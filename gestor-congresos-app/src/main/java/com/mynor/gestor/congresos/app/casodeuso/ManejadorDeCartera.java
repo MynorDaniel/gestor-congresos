@@ -15,13 +15,17 @@ import com.mynor.gestor.congresos.app.modelo.Usuario;
  */
 public class ManejadorDeCartera {
     
+    private final CarteraBD carteraBD;
+    
+    public ManejadorDeCartera(){
+        this.carteraBD = new CarteraBD();
+    }
+    
     public Cartera obtenerCartera(Usuario usuario) throws AccesoDeDatosException {
-        CarteraBD carteraBD = new CarteraBD();
         return carteraBD.leer(usuario.getId());
     }
 
     public Cartera actualizar(Cartera carteraTemporal) throws AccesoDeDatosException {
-        CarteraBD carteraBD = new CarteraBD();
         Cartera carteraReal = carteraBD.leer(carteraTemporal.getUsuario());
         carteraReal.setSaldo(carteraReal.getSaldo() + carteraTemporal.getSaldo());
         return carteraBD.actualizar(carteraReal);

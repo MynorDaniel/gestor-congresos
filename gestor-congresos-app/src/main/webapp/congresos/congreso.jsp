@@ -43,10 +43,17 @@
                     <a href="${pageContext.servletContext.contextPath}/confirmar-pago?congreso=${congreso.nombre}&usuario=${sessionScope.usuarioSession.id}&fecha=<%=LocalDate.now()%>" 
                        class="btn btn-secondary">Inscribirse</a>
                 </c:if>
+                
+                <!-- Enviar trabajo -->
+                <c:if test="${congreso.convocando}">
+                    <a href="${pageContext.servletContext.contextPath}/confirmar-pago?congreso=${congreso.nombre}&usuario=${sessionScope.usuarioSession.id}&fecha=<%=LocalDate.now()%>" 
+                       class="btn btn-secondary">Enviar trabajo</a>
+                </c:if>
 
                 <c:if test="${congreso.creador == sessionScope.usuarioSession.id}">
                     <a href="congresos/editar?nombre=${congreso.nombre}" class="btn btn-secondary mt-3">Editar</a>
                     <a href="${pageContext.servletContext.contextPath}/crear-actividad-form?congresoNombre=${congreso.nombre}" class="btn btn-secondary mt-3">Agregar actividad</a>
+                    <a href="${pageContext.servletContext.contextPath}/registro?rol=ponente-invitado&congreso=${congreso.nombre}" class="btn btn-secondary mt-3">Agregar ponente invitado</a>
                 </c:if>
                 
                 <h2 class="mt-3">Comité científico</h2>
@@ -94,7 +101,7 @@
                             <tr>
                                 <td>${actividad.nombre}</td>
                                 <td>${actividad.salonNombre}</td>
-                                <td>${actividad.cupo}</td>
+                                <td>${actividad.cupo == 0 ? 'Ilimitado' : actividad.cupo}</td>
                                 <td>${actividad.estado}</td>
                                 <td>${actividad.tipo}</td>
                                 <td>${actividad.horaInicio}</td>

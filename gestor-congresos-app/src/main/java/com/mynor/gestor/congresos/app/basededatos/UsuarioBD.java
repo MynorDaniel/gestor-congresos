@@ -54,7 +54,7 @@ public class UsuarioBD extends BaseDeDatos {
 
             if (filasAfectadas < 1 || filasAfectadas2 < 1 || filasAfectadas3 < 1) {
                 conn.rollback();
-                throw new AccesoDeDatosException("Error en el servidor");
+                throw new SQLException("Error en el servidor");
             }
 
             conn.commit();

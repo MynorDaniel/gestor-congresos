@@ -99,6 +99,25 @@
                     <input type="date" name="dia" class="form-control" 
                            value="${param.dia}" required>
                 </div>
+                
+                <div class="mb-3">
+                    <label for="encargadosSelect" class="form-label">Seleccionar Encargados</label>
+                    <select id="encargadosSelect" class="form-select" multiple>
+                        <c:forEach var="p" items="${posiblesEncargadosAtributo}">
+                            <option value="${p.usuarioId}">
+                                ${p.usuario.nombre} - ${p.rol}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <div id="encargadosSeleccionados" class="mt-3 mb-4">
+                    <h6>Encargados seleccionados:</h6>
+                    <ul class="list-group" id="encargadosLista"></ul>
+                </div>
+
+                <input type="hidden" name="encargadosUsuarios" id="encargadosUsuarios">
+
 
                 <div class="d-grid mb-3">
                     <button type="submit" class="btn btn-primary">Crear Actividad</button>
@@ -125,6 +144,25 @@
 
         toggleCupo();
         tipoSelect.addEventListener("change", toggleCupo);
+        
+        document.getElementById("encargadosSelect").addEventListener("change", function () {
+        const seleccionados = Array.from(this.selectedOptions);
+        const lista = document.getElementById("encargadosLista");
+        const hiddenInput = document.getElementById("encargadosUsuarios");
+
+        lista.innerHTML = "";
+
+        const values = seleccionados.map(opt => opt.value);
+
+        seleccionados.forEach(opt => {
+            const li = document.createElement("li");
+            li.className = "list-group-item";
+            li.textContent = opt.text;
+            lista.appendChild(li);
+        });
+
+        hiddenInput.value = values.join(",");
+    });
         
     </script>
 

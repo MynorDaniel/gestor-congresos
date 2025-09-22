@@ -55,6 +55,7 @@ public class ManejadorDeInscripciones extends Manejador {
         Congreso congreso = congresoBD.leer(filtrosCongreso)[0];
         
         //Validar duplicidad
+        if(existeInscripcion(inscripcion)) throw new InscripcionInvalidaException("Ya existe esta inscripcion");
         
         //Verificar saldo suficiente
         if(!saldoSuficiente(inscripcion, congreso)) throw new InscripcionInvalidaException("Saldo insuficiente");

@@ -6,9 +6,11 @@ package com.mynor.gestor.congresos.app.controlador;
 
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeCongresos;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstalaciones;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeParticipaciones;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
+import com.mynor.gestor.congresos.app.modelo.Participacion;
 import com.mynor.gestor.congresos.app.modelo.Salon;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
 import java.io.IOException;
@@ -37,6 +39,10 @@ public class ActividadFormControlador extends HttpServlet {
             
             ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
             Salon[] salones = manejadorInstalaciones.obtenerSalones(congreso.getInstalacionId());
+            
+            ManejadorDeParticipaciones mp = new ManejadorDeParticipaciones();
+            Participacion[] posiblesEncargados = mp.obtenerPosiblesEncargados(congreso);
+            request.setAttribute("posiblesEncargadosAtributo", posiblesEncargados);
             
             request.setAttribute("congresoAtributo", congreso);
             request.setAttribute("salonesAtributo", salones);

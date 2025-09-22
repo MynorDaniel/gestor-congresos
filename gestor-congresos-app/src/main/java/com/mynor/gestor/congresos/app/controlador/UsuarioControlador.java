@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author mynordma
  */
-@WebServlet(name = "UsuarioControlador", urlPatterns = {"/UsuarioControlador"})
+@WebServlet(name = "UsuarioControlador", urlPatterns = {"/usuarios"})
 public class UsuarioControlador extends HttpServlet {
 
     @Override

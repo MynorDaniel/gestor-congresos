@@ -43,7 +43,7 @@ public class CongresoBD extends BaseDeDatos {
                 int filasAfectadas = ps.executeUpdate();
                 if (filasAfectadas < 1) {
                     conn.rollback();
-                    throw new AccesoDeDatosException("Error en el servidor");
+                    throw new SQLException("Error en el servidor");
                 }
             }
 
@@ -65,7 +65,7 @@ public class CongresoBD extends BaseDeDatos {
                 int filasAfectadas = psInscripcion.executeUpdate();
                 if (filasAfectadas < 1) {
                     conn.rollback();
-                    throw new AccesoDeDatosException("Error en el servidor");
+                    throw new SQLException("Error en el servidor");
                 }
             }
             
@@ -78,7 +78,7 @@ public class CongresoBD extends BaseDeDatos {
                         int filasAfectadas = ps.executeUpdate();
                         if (filasAfectadas < 1) {
                             conn.rollback();
-                            throw new AccesoDeDatosException("Error en el servidor");
+                            throw new SQLException("Error en el servidor");
                         }
                     }
                     

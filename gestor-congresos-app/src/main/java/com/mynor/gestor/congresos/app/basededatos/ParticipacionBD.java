@@ -46,4 +46,52 @@ public class ParticipacionBD extends BaseDeDatos {
         }
     }
     
+    public void crear(Participacion p) throws AccesoDeDatosException {
+        String sql = "INSERT INTO participacion(usuario, congreso, rol) VALUES(?, ?, ?)";
+        String sqlInscripcion = "INSERT INTO inscripcion(usuario, congreso) VALUES(?, ?)";
+
+        Connection conn = ConexionBD.getInstance().getConnection();
+
+        try {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, p.getUsuarioId());
+                ps.setString(2, p.getCongresoNombre());
+                ps.setString(3, p.getRol().name());
+
+                int filasAfectadas = ps.executeUpdate();
+                if (filasAfectadas < 1) {
+                    throw new SQLException("Error en el servidor");
+                }
+            }
+
+            try (PreparedStatement ps2 = conn.prepareStatement(sqlInscripcion)) {
+                ps2.setString(1, p.getUsuarioId());
+                ps2.setString(2, p.getCongresoNombre());
+
+                int filasAfectadas = ps2.executeUpdate();
+                if (filasAfectadas < 1) {
+                    throw new SQLException("Error en el servidor");
+                }
+            }
+
+            conn.commit();
+
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+            throw new AccesoDeDatosException("Error en el servidor");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+    
 }
