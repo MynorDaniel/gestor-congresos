@@ -33,6 +33,9 @@
             <h4>Crear Actividad</h4>
             <form action="${pageContext.servletContext.contextPath}/actividades" method="post" class="mt-4">
 
+                <input type="hidden" name="esTrabajo" class="form-control" 
+                           value="${esTrabajo != null ? esTrabajo : null}">
+                
                 <div class="mb-3">
                     <label class="form-label">Nombre</label>
                     <input type="text" name="nombre" class="form-control" 

@@ -5,12 +5,14 @@
 package com.mynor.gestor.congresos.app.casodeuso;
 
 import com.mynor.gestor.congresos.app.basededatos.ActividadBD;
+import com.mynor.gestor.congresos.app.basededatos.EncargadoActividadBD;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.ActividadInvalidaException;
 import com.mynor.gestor.congresos.app.modelo.Actividad;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.modelo.EstadoActividad;
 import com.mynor.gestor.congresos.app.modelo.FiltrosActividad;
+import com.mynor.gestor.congresos.app.modelo.FiltrosUsuarioActividad;
 import com.mynor.gestor.congresos.app.modelo.Salon;
 
 /**
@@ -42,6 +44,8 @@ public class ManejadorDeActividades extends Manejador {
         
         //Validar que el salon no este ocupado
         if(salonOcupado(actividad)) throw new ActividadInvalidaException("Salón ocupado");
+        
+        //Validar que el autor este inscrito al congreso
         
         //Asignar estado
         if(congreso.getCreador().equals(actividad.getAutorId())){
@@ -101,6 +105,20 @@ public class ManejadorDeActividades extends Manejador {
         FiltrosActividad filtros = new FiltrosActividad();
         filtros.setCongresoNombre(nombreCongreso);
         return actividadBD.leer(filtros);
+    }
+
+    public Actividad[] obtener(FiltrosActividad filtros) throws AccesoDeDatosException {
+        Actividad[] actividades = actividadBD.leer(filtros);
+        
+        EncargadoActividadBD encargadoBD = new EncargadoActividadBD();
+        FiltrosUsuarioActividad filtrosUsuarioActividad = new FiltrosUsuarioActividad();
+        filtrosUsuarioActividad.setActividadCongreso(filtros.getCongresoNombre());
+        filtrosUsuarioActividad.setActividadNombre(filtros.getNombre());
+        
+        for (Actividad a : actividades) {
+            a.setEncargados(encargadoBD.leer(filtrosUsuarioActividad));
+        }
+        return actividades;
     }
     
 }

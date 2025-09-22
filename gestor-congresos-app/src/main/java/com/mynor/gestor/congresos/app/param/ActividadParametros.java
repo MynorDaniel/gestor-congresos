@@ -33,7 +33,7 @@ public class ActividadParametros extends Validador implements EntidadParseador<A
     private final String horaFinStr;
     private final String diaStr;
     private final Usuario usuarioActual;
-    private String encargadosStr;
+    private final String encargadosStr;
     private String[] idsEncargados;
 
     public ActividadParametros(HttpServletRequest request) {
@@ -86,18 +86,25 @@ public class ActividadParametros extends Validador implements EntidadParseador<A
         actividad.setDia(LocalDate.parse(diaStr));
         actividad.setAutorId(usuarioActual.getId());
         
-        EncargadoActividad[] encargados = new EncargadoActividad[idsEncargados.length];
         
-        for (int i = 0; i < idsEncargados.length; i++) {
-            EncargadoActividad encargo = new EncargadoActividad();
-            encargo.setActividadCongresoNombre(actividad.getCongresoNombre());
-            encargo.setActividadNombre(actividad.getNombre());
-            encargo.setUsuario(idsEncargados[i]);
-            
-            encargados[i] = encargo;
+        
+        if(!StringUtils.isBlank(encargadosStr) && idsEncargados.length >= 1){
+            EncargadoActividad[] encargados = new EncargadoActividad[idsEncargados.length];
+            for (int i = 0; i < idsEncargados.length; i++) {
+                EncargadoActividad encargo = new EncargadoActividad();
+                encargo.setActividadCongresoNombre(actividad.getCongresoNombre());
+                encargo.setActividadNombre(actividad.getNombre());
+                encargo.setUsuario(idsEncargados[i]);
+
+                encargados[i] = encargo;
+            }
+
+            actividad.setEncargados(encargados);
+        }else{
+            EncargadoActividad[] encargados = new EncargadoActividad[0];
+            actividad.setEncargados(encargados);
         }
         
-        actividad.setEncargados(encargados);
         
         return actividad;
     }
@@ -107,12 +114,12 @@ public class ActividadParametros extends Validador implements EntidadParseador<A
     }
     
     private boolean encargadosValidos(String encargados){
-        if(StringUtils.isBlank(encargados.trim())) return false;
+        if(StringUtils.isBlank(encargados)) return true;
         
         idsEncargados = encargados.split(",");
         
         if(idsEncargados.length < 1) {
-            return false;
+            return true;
         }
         
         for (String id : idsEncargados) {

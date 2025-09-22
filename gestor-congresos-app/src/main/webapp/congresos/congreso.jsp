@@ -46,8 +46,7 @@
                 
                 <!-- Enviar trabajo -->
                 <c:if test="${congreso.convocando}">
-                    <a href="${pageContext.servletContext.contextPath}/confirmar-pago?congreso=${congreso.nombre}&usuario=${sessionScope.usuarioSession.id}&fecha=<%=LocalDate.now()%>" 
-                       class="btn btn-secondary">Enviar trabajo</a>
+                        <a href="${pageContext.servletContext.contextPath}/crear-actividad-form?congresoNombre=${congreso.nombre}&esTrabajo=true" class="btn btn-secondary mt-3">Enviar trabajo</a>
                 </c:if>
 
                 <c:if test="${congreso.creador == sessionScope.usuarioSession.id}">
@@ -108,7 +107,7 @@
                                 <td>${actividad.horaFin}</td>
                                 <td>${actividad.dia}</td>
                                 <td>
-                                    <a href="#" 
+                                    <a href="${pageContext.servletContext.contextPath}/actividades?congreso=${congreso.nombre}&nombre=${actividad.nombre}" 
                                        class="btn btn-sm btn-primary">Ver</a>
                                 </td>
                             </tr>

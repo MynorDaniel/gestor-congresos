@@ -19,6 +19,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -35,7 +36,12 @@ public class ActividadFormControlador extends HttpServlet {
             ManejadorDeCongresos manejadorCongresos = new ManejadorDeCongresos();
             Congreso congreso = manejadorCongresos.obtenerCongreso(congresoNombre);
             
-            if(!congreso.getCreador().equals(((Usuario) request.getSession().getAttribute("usuarioSession")).getId())) throw new UsuarioInvalidoException("No puedes modificar este congreso");
+            String esTrabajo = request.getParameter("esTrabajo");
+            if(StringUtils.isBlank(esTrabajo) || !esTrabajo.equals("true")){
+                if(!congreso.getCreador().equals(((Usuario) request.getSession().getAttribute("usuarioSession")).getId())) throw new UsuarioInvalidoException("No puedes modificar este congreso");
+            }else{
+                request.setAttribute("esTrabajo", esTrabajo);
+            }
             
             ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
             Salon[] salones = manejadorInstalaciones.obtenerSalones(congreso.getInstalacionId());
