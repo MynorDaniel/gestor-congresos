@@ -12,7 +12,7 @@ import java.sql.*;
  *
  * @author mynordma
  */
-public class InstitucionBD extends BaseDeDatos {
+public class InstitucionBD implements BaseDeDatos {
 
     public Institucion[] leer() throws AccesoDeDatosException {
         String sql = "SELECT id, nombre FROM institucion";

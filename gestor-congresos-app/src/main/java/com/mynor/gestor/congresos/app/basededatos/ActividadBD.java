@@ -179,5 +179,56 @@ public class ActividadBD extends BaseDeDatos {
         
     }
         
-    
+    public void actualizar(Actividad actividad) throws AccesoDeDatosException {
+        StringBuilder sql = new StringBuilder("UPDATE actividad SET ");
+        boolean coma = false;
+
+        if (actividad.getCupo() > 0) {
+            sql.append("cupo = ?");
+            coma = true;
+        }
+        if (actividad.getEstado() != null) {
+            if (coma) sql.append(", ");
+            sql.append("estado = ?");
+            coma = true;
+        }
+        if (actividad.getDescripcion() != null) {
+            if (coma) sql.append(", ");
+            sql.append("descripcion = ?");
+            coma = true;
+        }
+
+        if (!coma) {
+            return;
+        }
+
+        sql.append(" WHERE nombre = ? AND congreso = ?");
+
+        Connection conn = ConexionBD.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int i = 1;
+
+            if (actividad.getCupo() > 0) {
+                ps.setInt(i++, actividad.getCupo());
+            }
+            if (actividad.getEstado() != null) {
+                ps.setString(i++, actividad.getEstado().name());
+            }
+            if (actividad.getDescripcion() != null) {
+                ps.setString(i++, actividad.getDescripcion());
+            }
+
+            ps.setString(i++, actividad.getNombre());
+            ps.setString(i, actividad.getCongresoNombre());
+
+            int filasAfectadas = ps.executeUpdate();
+            if (filasAfectadas < 1) {
+                throw new AccesoDeDatosException("No se pudo actualizar la actividad");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new AccesoDeDatosException("Error en el servidor");
+        }
+    }
+
 }

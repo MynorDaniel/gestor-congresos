@@ -57,11 +57,11 @@
                     </c:forEach>
 
                     <c:if test="${enComite}">
-                        <form action="${pageContext.servletContext.contextPath}/aprobar-trabajo" method="post" class="mt-3">
-                            <!-- Datos ocultos para identificar la actividad -->
-                            <input type="hidden" name="actividad" value="${actividadAtributo.nombre}">
+                        <form action="${pageContext.servletContext.contextPath}/actividades" method="post" class="mt-3">
+                            <input type="hidden" name="nombre" value="${actividadAtributo.nombre}">
                             <input type="hidden" name="congreso" value="${actividadAtributo.congresoNombre}">
-
+                            <input type="hidden" name="metodo" value="PUT">
+                            <input type="hidden" name="estado" value="APROBADA">
                             <button type="submit" class="btn btn-warning">Aprobar trabajo</button>
                         </form>
                     </c:if>

@@ -22,6 +22,7 @@ import com.mynor.gestor.congresos.app.modelo.Participacion;
 import com.mynor.gestor.congresos.app.modelo.Salon;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
 import com.mynor.gestor.congresos.app.param.ActividadParametros;
+import com.mynor.gestor.congresos.app.param.ActualizacionActividadParametros;
 import com.mynor.gestor.congresos.app.param.FiltrosActividadParametros;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -64,84 +65,110 @@ public class ActividadControlador extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             
-            //Parsear parametros
-            ActividadParametros actividadParam = new ActividadParametros(request);
-            Actividad actividad = actividadParam.toEntidad();
+            ActualizacionActividadParametros actualizacionParam = new ActualizacionActividadParametros(req);
+            Actividad actualizaciones = actualizacionParam.toEntidad();
             
-            //Obtener congreso
-            ManejadorDeCongresos manejadorCongresos = new ManejadorDeCongresos();
-            Congreso congreso = manejadorCongresos.obtenerCongreso(actividad.getCongresoNombre());
+            Usuario usuarioActual = (Usuario) req.getSession().getAttribute("usuarioSession");
+            if(usuarioActual == null) throw new UsuarioInvalidoException("Sesión inválida");
             
-            //Autorizacion
-            String esTrabajo = request.getParameter("esTrabajo");
-            if(StringUtils.isBlank(esTrabajo) || !esTrabajo.equals("true")){
-                if(!congreso.getCreador().equals(((Usuario) request.getSession().getAttribute("usuarioSession")).getId())) throw new UsuarioInvalidoException("No puedes modificar este congreso");
-            }
-            
-            //Crear actividad
             ManejadorDeActividades manejadorActividades = new ManejadorDeActividades();
-            manejadorActividades.crear(actividad);
-            if(StringUtils.isBlank(esTrabajo) || !esTrabajo.equals("true")){
-                request.setAttribute("infoAtributo", "Actividad creada exitosamente");
-            }else{
-                request.setAttribute("infoAtributo", "Actividad pendiente de aprobación");
-            }
+            Actividad actividad = manejadorActividades.actualizar(actualizaciones, usuarioActual);
             
-            //Obtener actividades
-            Actividad[] actividades = manejadorActividades.obtenerPorCongreso(congreso.getNombre());
-            request.setAttribute("actividadesAtributo", actividades);
-            
-            //Obtener instalacion del congreso
-            ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
-            Instalacion instalacion = manejadorInstalaciones.obtenerPorCongreso(congreso.getNombre());
-            request.setAttribute("instalacionAtributo", instalacion);
-
-            //Obtener comite cientifico
-            ManejadorDeParticipaciones manejadorParticipaciones = new ManejadorDeParticipaciones();
-            Participacion[] comite = manejadorParticipaciones.obtenerComite(congreso.getNombre());
-            request.setAttribute("comiteAtributo", comite);
-
-            request.setAttribute("congreso", congreso);
-            
-            //Obtener participantes inscritos
-            ManejadorDeInscripciones manejadorInscripciones = new ManejadorDeInscripciones();
-            Inscripcion[] inscripciones = manejadorInscripciones.obtenerPorCongreso(congreso.getNombre());
-            request.setAttribute("inscripcionesAtributo", inscripciones);
-            
-            request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
-            
+            resp.sendRedirect("actividades?congreso=" + actividad.getCongresoNombre() + "&nombre=" + actividad.getNombre());
         } catch (AccesoDeDatosException | ActividadInvalidaException | UsuarioInvalidoException e) {
+            
+            req.setAttribute("errorAtributo", e.getMessage());
+            req.getRequestDispatcher("actividades/actividad.jsp").forward(req, resp);
+        }
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        if ("PUT".equalsIgnoreCase(request.getParameter("metodo"))) {
+            doPut(request, response);
+        } else {
             try {
-                request.setAttribute("errorAtributo", e.getMessage());
-                String congresoNombre = request.getParameter("congreso");
-                ManejadorDeCongresos manejadorCongresos = new ManejadorDeCongresos();
-                Congreso congreso = manejadorCongresos.obtenerCongreso(congresoNombre);
-                
-                ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
-                Salon[] salones = manejadorInstalaciones.obtenerSalones(congreso.getInstalacionId());
 
-                request.setAttribute("congresoAtributo", congreso);
-                request.setAttribute("salonesAtributo", salones);
-                
-                ManejadorDeParticipaciones mp = new ManejadorDeParticipaciones();
-                Participacion[] posiblesEncargados = mp.obtenerPosiblesEncargados(congreso);
-                request.setAttribute("posiblesEncargadosAtributo", posiblesEncargados);
-                
+                //Parsear parametros
+                ActividadParametros actividadParam = new ActividadParametros(request);
+                Actividad actividad = actividadParam.toEntidad();
+
+                //Obtener congreso
+                ManejadorDeCongresos manejadorCongresos = new ManejadorDeCongresos();
+                Congreso congreso = manejadorCongresos.obtenerCongreso(actividad.getCongresoNombre());
+
+                //Autorizacion
                 String esTrabajo = request.getParameter("esTrabajo");
-                if(!StringUtils.isBlank(esTrabajo) && esTrabajo.equals("true")){
-                    request.setAttribute("esTrabajo", esTrabajo);
+                if(StringUtils.isBlank(esTrabajo) || !esTrabajo.equals("true")){
+                    if(!congreso.getCreador().equals(((Usuario) request.getSession().getAttribute("usuarioSession")).getId())) throw new UsuarioInvalidoException("No puedes modificar este congreso");
                 }
 
-                request.getRequestDispatcher("actividades/crear-actividad.jsp").forward(request, response);
+                //Crear actividad
+                ManejadorDeActividades manejadorActividades = new ManejadorDeActividades();
+                manejadorActividades.crear(actividad);
+                if(StringUtils.isBlank(esTrabajo) || !esTrabajo.equals("true")){
+                    request.setAttribute("infoAtributo", "Actividad creada exitosamente");
+                }else{
+                    request.setAttribute("infoAtributo", "Actividad pendiente de aprobación");
+                }
 
-            } catch (AccesoDeDatosException ex) {
-                request.setAttribute("errorAtributo", ex.getMessage());
-                request.getRequestDispatcher("actividades/crear-actividad.jsp").forward(request, response);
+                //Obtener actividades
+                Actividad[] actividades = manejadorActividades.obtenerPorCongreso(congreso.getNombre());
+                request.setAttribute("actividadesAtributo", actividades);
+
+                //Obtener instalacion del congreso
+                ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
+                Instalacion instalacion = manejadorInstalaciones.obtenerPorCongreso(congreso.getNombre());
+                request.setAttribute("instalacionAtributo", instalacion);
+
+                //Obtener comite cientifico
+                ManejadorDeParticipaciones manejadorParticipaciones = new ManejadorDeParticipaciones();
+                Participacion[] comite = manejadorParticipaciones.obtenerComite(congreso.getNombre());
+                request.setAttribute("comiteAtributo", comite);
+
+                request.setAttribute("congreso", congreso);
+
+                //Obtener participantes inscritos
+                ManejadorDeInscripciones manejadorInscripciones = new ManejadorDeInscripciones();
+                Inscripcion[] inscripciones = manejadorInscripciones.obtenerPorCongreso(congreso.getNombre());
+                request.setAttribute("inscripcionesAtributo", inscripciones);
+
+                request.getRequestDispatcher("congresos/congreso.jsp").forward(request, response);
+
+            } catch (AccesoDeDatosException | ActividadInvalidaException | UsuarioInvalidoException e) {
+                try {
+                    request.setAttribute("errorAtributo", e.getMessage());
+                    String congresoNombre = request.getParameter("congreso");
+                    ManejadorDeCongresos manejadorCongresos = new ManejadorDeCongresos();
+                    Congreso congreso = manejadorCongresos.obtenerCongreso(congresoNombre);
+
+                    ManejadorDeInstalaciones manejadorInstalaciones = new ManejadorDeInstalaciones();
+                    Salon[] salones = manejadorInstalaciones.obtenerSalones(congreso.getInstalacionId());
+
+                    request.setAttribute("congresoAtributo", congreso);
+                    request.setAttribute("salonesAtributo", salones);
+
+                    ManejadorDeParticipaciones mp = new ManejadorDeParticipaciones();
+                    Participacion[] posiblesEncargados = mp.obtenerPosiblesEncargados(congreso);
+                    request.setAttribute("posiblesEncargadosAtributo", posiblesEncargados);
+
+                    String esTrabajo = request.getParameter("esTrabajo");
+                    if(!StringUtils.isBlank(esTrabajo) && esTrabajo.equals("true")){
+                        request.setAttribute("esTrabajo", esTrabajo);
+                    }
+
+                    request.getRequestDispatcher("actividades/crear-actividad.jsp").forward(request, response);
+
+                } catch (AccesoDeDatosException ex) {
+                    request.setAttribute("errorAtributo", ex.getMessage());
+                    request.getRequestDispatcher("actividades/crear-actividad.jsp").forward(request, response);
+                }
             }
         }
+        
     }
 }

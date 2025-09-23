@@ -8,12 +8,15 @@ import com.mynor.gestor.congresos.app.basededatos.ActividadBD;
 import com.mynor.gestor.congresos.app.basededatos.EncargadoActividadBD;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.ActividadInvalidaException;
+import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Actividad;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.modelo.EstadoActividad;
 import com.mynor.gestor.congresos.app.modelo.FiltrosActividad;
 import com.mynor.gestor.congresos.app.modelo.FiltrosUsuarioActividad;
+import com.mynor.gestor.congresos.app.modelo.Participacion;
 import com.mynor.gestor.congresos.app.modelo.Salon;
+import com.mynor.gestor.congresos.app.modelo.Usuario;
 
 /**
  *
@@ -119,6 +122,48 @@ public class ManejadorDeActividades extends Manejador {
             a.setEncargados(encargadoBD.leer(filtrosUsuarioActividad));
         }
         return actividades;
+    }
+
+    public Actividad actualizar(Actividad actualizaciones, Usuario usuarioActual) throws AccesoDeDatosException, UsuarioInvalidoException {
+        //Obtener la actividad y sobreescribir los cambios
+        
+        FiltrosActividad filtros = new FiltrosActividad();
+        filtros.setNombre(actualizaciones.getNombre());
+        filtros.setCongresoNombre(actualizaciones.getCongresoNombre());
+        Actividad[] coincidencias = actividadBD.leer(filtros);
+        
+        if(coincidencias.length < 1) throw new AccesoDeDatosException("No se pudo obtener la actividad");
+        Actividad actividad = coincidencias[0];
+        
+        //Autorizacion
+        ManejadorDeCongresos mc = new ManejadorDeCongresos();
+        Congreso congreso = mc.obtenerCongreso(actividad.getCongresoNombre());
+        if(!usuarioActual.getId().equals(congreso.getCreador())){
+            ManejadorDeParticipaciones mp = new  ManejadorDeParticipaciones();
+            Participacion[] comiteMiembros = mp.obtenerComite(congreso.getNombre());
+            boolean esDelComite = false;
+            for (Participacion comiteMiembro : comiteMiembros) {
+                if(comiteMiembro.getUsuarioId().equals(usuarioActual.getId())) esDelComite = true;
+            }
+            
+            if(!esDelComite) throw new UsuarioInvalidoException("No perteneces al comité científico");
+        }
+        
+        if(actualizaciones.getCupo() != 0){
+            actividad.setCupo(actualizaciones.getCupo());
+        }
+        
+        if(actualizaciones.getEstado()!= null){
+            actividad.setEstado(actualizaciones.getEstado());
+        }
+        
+        if(actualizaciones.getDescripcion()!= null){
+            actividad.setDescripcion(actualizaciones.getDescripcion());
+        }
+        
+        actividadBD.actualizar(actividad);
+        
+        return actividad;
     }
     
 }
