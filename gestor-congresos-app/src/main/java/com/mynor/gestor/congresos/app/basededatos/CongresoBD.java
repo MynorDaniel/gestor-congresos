@@ -40,7 +40,7 @@ public class CongresoBD extends BaseDeDatos {
                 ps.setBoolean(8, congreso.isActivado());
                 ps.setInt(9, congreso.getInstalacionId());
                 ps.setInt(10, congreso.getInstitucionId());
-
+                System.out.println("SQLCongreso: " + sqlCongreso);
                 int filasAfectadas = ps.executeUpdate();
                 if (filasAfectadas < 1) {
                     conn.rollback();

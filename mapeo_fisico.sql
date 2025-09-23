@@ -49,8 +49,7 @@ CREATE TABLE congreso (
     institucion INT,
     PRIMARY KEY (nombre),
     CONSTRAINT fk_usuario_congreso FOREIGN KEY (creador) REFERENCES usuario (id),
-    CONSTRAINT fk_instalacion_congreso FOREIGN KEY (instalacion) REFERENCES instalacion (id),
-    CONSTRAINT fk_institucion_congreso FOREIGN KEY (institucion) REFERENCES institucion (id)
+    CONSTRAINT fk_instalacion_congreso FOREIGN KEY (instalacion) REFERENCES instalacion (id)
 );
 
 CREATE TABLE actividad (
