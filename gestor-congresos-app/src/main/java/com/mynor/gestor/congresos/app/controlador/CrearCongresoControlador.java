@@ -5,10 +5,12 @@
 package com.mynor.gestor.congresos.app.controlador;
 
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstalaciones;
+import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeInstituciones;
 import com.mynor.gestor.congresos.app.casodeuso.ManejadorDeUsuarios;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Instalacion;
+import com.mynor.gestor.congresos.app.modelo.Institucion;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -37,6 +39,10 @@ public class CrearCongresoControlador extends HttpServlet {
             
             ManejadorDeUsuarios manejadorUsuarios = new ManejadorDeUsuarios();
             Usuario[] usuarios = manejadorUsuarios.obtenerTodos();
+            
+            ManejadorDeInstituciones manejadorInstituciones = new ManejadorDeInstituciones();
+            Institucion[] instituciones = manejadorInstituciones.obtenerPorUsuario(usuarioActual.getId());
+            request.setAttribute("institucionesAtributo", instituciones);
 
             request.setAttribute("usuariosAtributo", usuarios);
             request.setAttribute("instalacionesAtributo", instalaciones);

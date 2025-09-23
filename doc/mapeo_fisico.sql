@@ -33,9 +33,11 @@ CREATE TABLE congreso (
     descripcion TEXT,
     activado BOOL DEFAULT 1,
     instalacion INT,
+    institucion INT,
     PRIMARY KEY (nombre),
     CONSTRAINT fk_usuario_congreso FOREIGN KEY (creador) REFERENCES usuario (id),
-    CONSTRAINT fk_instalacion_congreso FOREIGN KEY (instalacion) REFERENCES instalacion (id)
+    CONSTRAINT fk_instalacion_congreso FOREIGN KEY (instalacion) REFERENCES instalacion (id),
+    CONSTRAINT fk_institucion_congreso FOREIGN KEY (institucion) REFERENCES institucion (id)
 );
 
 CREATE TABLE actividad (
@@ -162,5 +164,6 @@ INSERT INTO usuario VALUES ('0', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4
 INSERT INTO cartera (usuario) VALUES ('0');
 INSERT INTO configuracion_pago(tipo, valor) VALUES('comision', 0.1);
 INSERT INTO institucion (nombre) VALUES ('Code''n Bugs');
+INSERT INTO afiliacion (usuario, institucion) VALUES ('0', 1);
 
 

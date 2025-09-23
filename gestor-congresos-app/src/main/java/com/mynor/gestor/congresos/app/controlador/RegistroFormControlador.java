@@ -40,7 +40,6 @@ public class RegistroFormControlador extends HttpServlet {
             
             ManejadorDeInstituciones manejadorInstituciones = new ManejadorDeInstituciones();
             Institucion[] instituciones = manejadorInstituciones.obtenerTodas();
-            System.out.println(instituciones[0].getNombre());
             request.setAttribute("institucionesAtributo", instituciones);
             request.getRequestDispatcher("usuario/registroUsuario.jsp").forward(request, response);
             

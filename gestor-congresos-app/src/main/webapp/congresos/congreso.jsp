@@ -31,6 +31,7 @@
                 <p><strong>Fin:</strong> <c:out value="${congreso.fechaFin}"/></p>
                 <p><strong>Descripción:</strong> <c:out value="${congreso.descripcion != null ? congreso.descripcion : '-'}"/></p>
                 <p><strong>Ubicación:</strong> <c:out value="${instalacionAtributo.ubicacion != null ? instalacionAtributo.ubicacion : '-'}"/></p>
+                <p><strong>Institucion:</strong> <c:out value="${congreso.institucion.nombre != null ? congreso.institucion.nombre : '-'}"/></p>
                 
                 <c:set var="yaInscrito" value="false" />
                 <c:forEach var="inscripcion" items="${inscripcionesAtributo}">

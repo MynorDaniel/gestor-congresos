@@ -17,8 +17,8 @@ import java.sql.*;
 public class CongresoBD extends BaseDeDatos {
 
     public Congreso crear(Congreso congreso) throws AccesoDeDatosException {
-        String sqlCongreso = "INSERT INTO congreso(nombre, creador, precio, convocando, fecha, fecha_fin, descripcion, activado, instalacion) " +
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlCongreso = "INSERT INTO congreso(nombre, creador, precio, convocando, fecha, fecha_fin, descripcion, activado, instalacion, institucion) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String sqlComite = "INSERT INTO participacion(usuario, congreso, rol) VALUES (?, ?, ?)";
         
@@ -39,6 +39,7 @@ public class CongresoBD extends BaseDeDatos {
                 ps.setString(7, congreso.getDescripcion());
                 ps.setBoolean(8, congreso.isActivado());
                 ps.setInt(9, congreso.getInstalacionId());
+                ps.setInt(10, congreso.getInstitucionId());
 
                 int filasAfectadas = ps.executeUpdate();
                 if (filasAfectadas < 1) {
@@ -109,7 +110,6 @@ public class CongresoBD extends BaseDeDatos {
     }
 
     
-//  SELECT * FROM congreso c JOIN usuario u ON c.creador = u.id JOIN afiliacion a ON u.id = a.usuario WHERE institucion = CUNOC AND fecha_inicio BETWEEN '2024-02-02' AND '2026-02-02'
     public Congreso[] leer(FiltrosCongreso filtros) throws AccesoDeDatosException {
         StringBuilder sql = new StringBuilder("SELECT * FROM congreso WHERE 1=1");
 
@@ -125,6 +125,10 @@ public class CongresoBD extends BaseDeDatos {
         
         if(filtros.getFechaInicio() != null && filtros.getFechaFin() != null){
             sql.append(" AND fecha BETWEEN ? AND ?");
+        }
+        
+        if (filtros.getInstitucion() > 0) {
+            sql.append(" AND institucion = ?");
         }
         
         Connection conn = ConexionBD.getInstance().getConnection();
@@ -154,6 +158,11 @@ public class CongresoBD extends BaseDeDatos {
                 ps.setDate(i, Date.valueOf(filtros.getFechaFin()));
                 i++;
             }
+            
+            if (filtros.getInstitucion() > 0) {
+                ps.setInt(i, filtros.getInstitucion());
+                i++;
+            }
 
             ResultSet rs = ps.executeQuery();
 
@@ -170,6 +179,7 @@ public class CongresoBD extends BaseDeDatos {
                 congreso.setDescripcion(rs.getString("descripcion"));
                 congreso.setActivado(rs.getBoolean("activado"));
                 congreso.setInstalacionId(rs.getInt("instalacion"));
+                congreso.setInstitucionId(rs.getInt("institucion"));
 
                 congresos[j] = congreso;
                 j++;

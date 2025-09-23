@@ -4,13 +4,20 @@
  */
 package com.mynor.gestor.congresos.app.casodeuso;
 
+import com.mynor.gestor.congresos.app.basededatos.AfiliacionBD;
 import com.mynor.gestor.congresos.app.basededatos.CongresoBD;
+import com.mynor.gestor.congresos.app.basededatos.InstitucionBD;
+import com.mynor.gestor.congresos.app.basededatos.PagoBD;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.CongresoInvalidoException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
+import com.mynor.gestor.congresos.app.modelo.Afiliacion;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.modelo.FiltrosCongreso;
+import com.mynor.gestor.congresos.app.modelo.Institucion;
+import com.mynor.gestor.congresos.app.modelo.Pago;
 import java.time.LocalDate;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -32,13 +39,19 @@ public class ManejadorDeCongresos extends Manejador {
         if(!esAdminDeCongresos(congresoNuevo.getCreador())) throw new UsuarioInvalidoException("No puedes crear congresos");
         
         //Verificar que el usuario tenga una institucion
-        //TO-DO
+        //...
         
         //Verificar fechas logicas
         if(!fechasLogicas(congresoNuevo.getFechaInicio(), congresoNuevo.getFechaFin())) throw new UsuarioInvalidoException("La fecha inicial debe ser anterior a la fecha final");
         
         //Verificar que la instalacion no este ocupada
         if(instalacionOcupada(congresoNuevo)) throw new UsuarioInvalidoException("La instalación esta siendo ocupada");
+        
+        //Asignar institucion
+        AfiliacionBD afiliacionBD = new AfiliacionBD();
+        Afiliacion afiliacion = afiliacionBD.leerPorUsuario(congresoNuevo.getCreador())[0];
+        InstitucionBD institucionBD = new InstitucionBD();
+        congresoNuevo.setInstitucion(institucionBD.leerPorId(afiliacion.getInstitucion().getId()));
         
         //Crear el congreso
         congresoBD.crear(congresoNuevo);
@@ -64,24 +77,78 @@ public class ManejadorDeCongresos extends Manejador {
     public Congreso obtenerCongreso(String nombre) throws AccesoDeDatosException {
         FiltrosCongreso filtros = new FiltrosCongreso();
         filtros.setNombre(nombre);
-        return congresoBD.leer(filtros)[0];
+        Congreso congreso = congresoBD.leer(filtros)[0];
+        InstitucionBD institucionBD = new InstitucionBD();
+        congreso.setInstitucion(institucionBD.leerPorId(congreso.getInstitucionId()));
+        
+        return congreso;
     }
 
     public Congreso[] obtenerCongresos(String creador) throws AccesoDeDatosException {
         FiltrosCongreso filtros = new FiltrosCongreso();
         filtros.setCreador(creador);
-        return congresoBD.leer(filtros);
+        InstitucionBD institucionBD = new InstitucionBD();
+        Congreso[] congresos = congresoBD.leer(filtros);
+        for (Congreso congreso : congresos) {
+            congreso.setInstitucion(institucionBD.leerPorId(congreso.getInstitucionId()));
+        }
+        return congresos;
     }
 
     public Congreso[] obtenerCongresos() throws AccesoDeDatosException {
-        return congresoBD.leer(new FiltrosCongreso());
+        InstitucionBD institucionBD = new InstitucionBD();
+        Congreso[] congresos = congresoBD.leer(new FiltrosCongreso());
+        for (Congreso congreso : congresos) {
+            congreso.setInstitucion(institucionBD.leerPorId(congreso.getInstitucionId()));
+        }
+        return congresos;
     }
 
     private boolean existeCongreso(Congreso congresoNuevo) throws AccesoDeDatosException {
         FiltrosCongreso filtros = new FiltrosCongreso();
         filtros.setNombre(congresoNuevo.getNombre());
-        
         return congresoBD.leer(filtros).length > 0;
     }
+
+    public Congreso[] obtenerCongresos(FiltrosCongreso filtros) throws AccesoDeDatosException {
+        if(filtros.getFechaInicio() != null && filtros.getFechaFin() != null){
+            if(!fechasLogicas(filtros.getFechaInicio(), filtros.getFechaFin())) throw new AccesoDeDatosException("Verifica que la fecha final sea despues de la inicial");
+        }
+        return congresoBD.leer(filtros);
+    }
+
+    public Pago[] obtenerPagos(String nombre) throws AccesoDeDatosException {
+        return (new PagoBD()).leerPorCongreso(nombre);
+    }
+
+    public Congreso[] ordenarPorGanancias(Congreso[] congresos) {
+        Congreso[] resultado = congresos.clone();
+
+        for (int i = 0; i < resultado.length - 1; i++) {
+            for (int j = 0; j < resultado.length - i - 1; j++) {
+                double gananciasJ = calcularGanancia(resultado[j]);
+                double gananciasJ1 = calcularGanancia(resultado[j + 1]);
+
+                if (gananciasJ < gananciasJ1) {
+                    Congreso temp = resultado[j];
+                    resultado[j] = resultado[j + 1];
+                    resultado[j + 1] = temp;
+                }
+            }
+        }
+
+        return resultado;
+    }
+
+    private double calcularGanancia(Congreso c) {
+        double ganancia = 0;
+        if (c.getPagos() != null) {
+            for (Pago p : c.getPagos()) {
+                ganancia += p.getMonto() * p.getComisionCobrada();
+            }
+        }
+        return ganancia;
+    }
+
     
 }

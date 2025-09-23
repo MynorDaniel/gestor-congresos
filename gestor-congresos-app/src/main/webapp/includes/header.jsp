@@ -55,21 +55,34 @@
 
                         <li class="nav-item"><a class="nav-link" href="${pageContext.servletContext.contextPath}/instalaciones/crear-instalacion.jsp">Instalaciones</a></li>
                       
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="reportesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Reportes
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="reportesDropdown">
+                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-sistema?reporte=congresos">Reporte de participantes</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-sistema?reporte=ganancias">Reporte de asistencias</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-sistema?reporte=congresos">Reporte de reservas a talleres</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-sistema?reporte=ganancias">Reporte de ganancias</a></li>
+
+                            </ul>
+                        </li>
+                        
                 <%
                         } else if (rol == RolSistema.ADMIN_SISTEMA) {
                 %>
                         <!-- Header Admin -->
                         
                         <li class="nav-item"><a class="nav-link" href="#">Comisión</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Instituciones</a></li>
+                        <li class="nav-item"><a class="nav-link" href="${pageContext.servletContext.contextPath}/instituciones">Instituciones</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Usuarios</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="reportesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Reportes
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="reportesDropdown">
-                                <li><a class="dropdown-item" href="#">Reporte Congresos</a></li>
-                                <li><a class="dropdown-item" href="#">Reporte Ganancias</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-sistema?reporte=congresos">Reporte Congresos</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-sistema?reporte=ganancias">Reporte Ganancias</a></li>
                             </ul>
                         </li>
 

@@ -15,7 +15,7 @@ public class FiltrosCongreso extends Filtros {
     private String nombre;
     private String creador;
     private Integer instalacion;
-    private String institucion;
+    private int institucion;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
 
@@ -59,11 +59,11 @@ public class FiltrosCongreso extends Filtros {
         this.instalacion = instalacion;
     }
 
-    public String getInstitucion() {
+    public int getInstitucion() {
         return institucion;
     }
 
-    public void setInstitucion(String institucion) {
+    public void setInstitucion(int institucion) {
         this.institucion = institucion;
     }
     

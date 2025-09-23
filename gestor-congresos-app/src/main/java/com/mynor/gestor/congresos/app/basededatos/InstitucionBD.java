@@ -5,6 +5,7 @@
 package com.mynor.gestor.congresos.app.basededatos;
 
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
+import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.modelo.Institucion;
 import java.sql.*;
 
@@ -122,5 +123,4 @@ public class InstitucionBD extends BaseDeDatos {
             throw new AccesoDeDatosException("Error al leer institución por ID");
         }
     }
-    
 }

@@ -22,6 +22,33 @@ public class Congreso {
     private boolean activado;
     private int instalacionId;
     private Participacion[] comite;
+    private Institucion institucion;
+    private int institucionId;
+    private Pago[] pagos;
+
+    public Pago[] getPagos() {
+        return pagos;
+    }
+
+    public void setPagos(Pago[] pagos) {
+        this.pagos = pagos;
+    }
+
+    public Institucion getInstitucion() {
+        return institucion;
+    }
+
+    public int getInstitucionId() {
+        return institucionId;
+    }
+
+    public void setInstitucionId(int institucionId) {
+        this.institucionId = institucionId;
+    }
+
+    public void setInstitucion(Institucion institucion) {
+        this.institucion = institucion;
+    }
 
     public LocalDate getFecha() {
         return fecha;

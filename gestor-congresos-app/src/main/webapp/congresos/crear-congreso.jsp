@@ -87,6 +87,18 @@
             </div>
 
             <input type="hidden" name="comiteUsuarios" id="comiteUsuarios">
+            
+            <div class="mb-3">
+                <label for="institucion" class="form-label">Institución</label>
+                <select class="form-select" id="institucion" name="institucion" required>
+                    <c:forEach var="inst" items="${institucionesAtributo}">
+                        <option value="${inst.id}" 
+                            <c:if test="${param.institucion == inst.id}">selected</c:if>>
+                            ${inst.nombre}
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
 
 
             <button type="submit" class="btn btn-primary w-100 mb-5">Crear Congreso</button>
