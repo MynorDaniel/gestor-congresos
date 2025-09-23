@@ -11,9 +11,9 @@ import java.sql.SQLException;
  *
  * @author mynordma
  */
-interface BaseDeDatos {
+public abstract class BaseDeDatos {
     
-    default int obtenerLongitudDeResultSet(ResultSet rs) throws SQLException{
+    protected int obtenerLongitudDeResultSet(ResultSet rs) throws SQLException{
         if (rs.last()) {
             int longitud = rs.getRow();
             rs.beforeFirst();
