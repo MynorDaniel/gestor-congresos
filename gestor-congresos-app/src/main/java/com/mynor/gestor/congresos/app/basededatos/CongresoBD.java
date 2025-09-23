@@ -193,6 +193,25 @@ public class CongresoBD extends BaseDeDatos {
         }
     }
 
+    public void actualizarConvocatoria(Congreso congreso) throws AccesoDeDatosException {
+        String sql = "UPDATE congreso SET convocando = ? WHERE nombre = ?";
+
+        Connection conn = ConexionBD.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBoolean(1, congreso.isConvocando());
+            ps.setString(2, congreso.getNombre());
+
+            int filas = ps.executeUpdate();
+            if (filas == 0) {
+                throw new AccesoDeDatosException("No se encontró el congreso");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new AccesoDeDatosException("Error al actualizar convocatoria");
+        }
+    }
+
+
 
     
 }

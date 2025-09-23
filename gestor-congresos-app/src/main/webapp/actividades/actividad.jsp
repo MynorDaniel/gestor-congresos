@@ -33,7 +33,7 @@
                 <c:if test="${actividadAtributo.tipo == 'TALLER'}">
                     <c:set var="yaReservado" value="false"/>
                     <c:forEach var="r" items="${reservacionesAtributo}">
-                        <c:if test="${r.usuario == sessionScope.usuario.id}">
+                        <c:if test="${r.usuario == sessionScope.usuarioSession.id}">
                             <c:set var="yaReservado" value="true"/>
                         </c:if>
                     </c:forEach>
@@ -41,6 +41,7 @@
                     <c:if test="${not yaReservado}">
                         <form action="${pageContext.servletContext.contextPath}/reservaciones" method="post" class="mt-3">
                             <input type="hidden" name="actividad" value="${actividadAtributo.nombre}">
+                            <input type="hidden" name="congreso" value="${actividadAtributo.congresoNombre}">
                             <button type="submit" class="btn btn-success">Reservar cupo</button>
                         </form>
                     </c:if>
@@ -88,8 +89,8 @@
                 <c:forEach var="r" items="${reservacionesAtributo}">
                     <tr>
                         <td>${r.usuario}</td>
-                        <td>${r.actividad_nombre}</td>
-                        <td>${r.actividad_congreso}</td>
+                        <td>${r.actividadNombre}</td>
+                        <td>${r.actividadCongresoNombre}</td>
                     </tr>
                 </c:forEach>
             </tbody>

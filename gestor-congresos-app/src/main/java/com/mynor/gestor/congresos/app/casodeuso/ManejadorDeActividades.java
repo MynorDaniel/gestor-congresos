@@ -10,13 +10,21 @@ import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.ActividadInvalidaException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Actividad;
+import com.mynor.gestor.congresos.app.modelo.Asistencia;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.modelo.EstadoActividad;
 import com.mynor.gestor.congresos.app.modelo.FiltrosActividad;
+import com.mynor.gestor.congresos.app.modelo.FiltrosAsistencia;
+import com.mynor.gestor.congresos.app.modelo.FiltrosCongreso;
 import com.mynor.gestor.congresos.app.modelo.FiltrosUsuarioActividad;
 import com.mynor.gestor.congresos.app.modelo.Participacion;
+import com.mynor.gestor.congresos.app.modelo.Reservacion;
 import com.mynor.gestor.congresos.app.modelo.Salon;
+import com.mynor.gestor.congresos.app.modelo.TipoActividad;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -164,6 +172,140 @@ public class ManejadorDeActividades extends Manejador {
         actividadBD.actualizar(actividad);
         
         return actividad;
+    }
+
+    public Asistencia[] obtenerAsistencias(FiltrosAsistencia filtros, Usuario creador) throws AccesoDeDatosException {
+        FiltrosCongreso filtrosC = new FiltrosCongreso();
+        
+        
+        if(filtros.getFechaInicio() != null && filtros.getFechaFin() != null){
+            if(!fechasLogicas(filtros.getFechaInicio(), filtros.getFechaFin())) throw new AccesoDeDatosException("Verifica que la fecha final sea despues de la inicial");
+            filtrosC.setFechaInicio(filtros.getFechaInicio());
+            filtrosC.setFechaFin(filtros.getFechaFin());
+            
+        }
+        filtrosC.setCreador(creador.getId());
+        ManejadorDeCongresos mc = new ManejadorDeCongresos();
+        Congreso[] congresos = mc.obtenerCongresos(filtrosC);
+        
+        
+        
+        List<Actividad> actividades = new LinkedList<>();
+        
+        for (Congreso congreso : congresos) {
+            FiltrosActividad filtrosA = new FiltrosActividad();
+            filtrosA.setCongresoNombre(congreso.getNombre());
+            
+            if(filtros.getSalonNombre() != null){
+                filtrosA.setSalonNombre(filtros.getSalonNombre());
+            }
+            
+            actividades.addAll(Arrays.asList(actividadBD.leer(filtrosA)));
+        }
+        
+        if(filtros.getActividadNombre() != null){
+            for (Actividad a : actividades) {
+                System.out.println("Act: " + a.getNombre());
+                if(a.getNombre().equals(filtros.getActividadNombre())){
+                    return actividadBD.leerAsistenciasPorActividad(a);
+                }
+            }
+            
+            return new Asistencia[0];
+        }
+        
+        List<Asistencia> asistencias = new LinkedList<>();
+        for (Actividad a : actividades) {
+            asistencias.addAll(Arrays.asList(actividadBD.leerAsistenciasPorActividad(a)));
+        }
+        
+        return asistencias.toArray(Asistencia[]::new);
+    }
+
+    public Actividad[] obtenerPorCongresos(Congreso[] congresos) throws AccesoDeDatosException {
+        List<Actividad> actividades = new LinkedList<>();
+        for (Congreso congreso : congresos) {
+            actividades.addAll(Arrays.asList(this.obtenerPorCongreso(congreso.getNombre())));
+        }
+        return actividades.toArray(Actividad[]::new);
+    }
+
+    public Reservacion[] obtenerReservaciones(Actividad actividad) throws AccesoDeDatosException {
+        return actividadBD.leerReservaciones(actividad);
+    }
+
+    public void crearReservacion(Reservacion reservacion) throws AccesoDeDatosException {
+        //Verificar cupo
+        FiltrosActividad filtros = new FiltrosActividad();
+        filtros.setNombre(reservacion.getActividadNombre());
+        filtros.setCongresoNombre(reservacion.getActividadCongresoNombre());
+        Actividad actividad = actividadBD.leer(filtros)[0];
+        
+        Reservacion[] reservaciones = actividadBD.leerReservaciones(actividad);
+        
+        if(reservaciones.length >= actividad.getCupo()) throw new AccesoDeDatosException("Sin cupo");
+        
+        actividadBD.crearReservacion(reservacion);
+    }
+
+    public Reservacion[] obtenerReservacionesPorCongresos(Congreso[] congresos, String actividadNombre) throws AccesoDeDatosException {
+        List<Reservacion> reservas = new LinkedList<>();
+        
+        for (Congreso congreso : congresos) {
+            
+            FiltrosActividad filtros = new FiltrosActividad();
+            filtros.setCongresoNombre(congreso.getNombre());
+            
+            if(actividadNombre != null){
+                filtros.setNombre(actividadNombre);
+            }
+            
+            Actividad[] actividades = actividadBD.leer(filtros);
+            
+            for (Actividad a : actividades) {
+                reservas.addAll(Arrays.asList(actividadBD.leerReservaciones(a)));
+                System.out.println("Act: " + a.getNombre());
+            }
+            
+        }
+        
+        ManejadorDeUsuarios mu = new ManejadorDeUsuarios();
+            
+            for (Reservacion r : reservas) {
+                System.out.println("r: " + r.getActividadNombre());
+                r.setUsuarioEntidad(mu.obtenerPorId(r.getUsuario()));
+                FiltrosActividad filtros2 = new FiltrosActividad();
+                filtros2.setCongresoNombre(r.getActividadCongresoNombre());
+                filtros2.setNombre(r.getActividadNombre());
+                
+                Actividad actividadDeReserva = this.obtener(filtros2)[0];
+                
+                r.setActividad(actividadDeReserva);
+            }
+        
+        return reservas.toArray(Reservacion[]::new);
+    }
+
+    public void crearAsistencia(Asistencia a) throws AccesoDeDatosException {
+        
+        FiltrosActividad filtros = new FiltrosActividad();
+        filtros.setCongresoNombre(a.getActividadCongresoNombre());
+        filtros.setNombre(a.getActividadNombre());
+        Actividad act = this.obtener(filtros)[0];
+        
+        if(act.getTipo() == TipoActividad.TALLER){
+            Reservacion[] reservaciones = this.obtenerReservaciones(act);
+            boolean tieneReservacion = false;
+            for (Reservacion r : reservaciones) {
+                if(r.getUsuario().equals(a.getUsuario())){
+                    tieneReservacion = true;
+                }
+            }
+
+            if(!tieneReservacion) throw new AccesoDeDatosException("Sin reservacion");
+        }
+        
+        actividadBD.crearAsistencia(a);
     }
     
 }

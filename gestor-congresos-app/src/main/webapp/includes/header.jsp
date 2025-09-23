@@ -60,10 +60,10 @@
                                 Reportes
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="reportesDropdown">
-                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-sistema?reporte=congresos">Reporte de participantes</a></li>
-                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-sistema?reporte=ganancias">Reporte de asistencias</a></li>
-                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-sistema?reporte=congresos">Reporte de reservas a talleres</a></li>
-                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-sistema?reporte=ganancias">Reporte de ganancias</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-admin-congreso?reporte=participaciones">Reporte de participantes</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-admin-congreso?reporte=asistencias">Reporte de asistencias</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-admin-congreso?reporte=reservaciones">Reporte de reservas a talleres</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/reportes-admin-congreso?reporte=ganancias">Reporte de ganancias</a></li>
 
                             </ul>
                         </li>

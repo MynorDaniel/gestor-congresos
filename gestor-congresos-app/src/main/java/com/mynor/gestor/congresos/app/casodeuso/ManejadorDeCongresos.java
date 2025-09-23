@@ -14,10 +14,7 @@ import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
 import com.mynor.gestor.congresos.app.modelo.Afiliacion;
 import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.modelo.FiltrosCongreso;
-import com.mynor.gestor.congresos.app.modelo.Institucion;
 import com.mynor.gestor.congresos.app.modelo.Pago;
-import java.time.LocalDate;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -57,10 +54,6 @@ public class ManejadorDeCongresos extends Manejador {
         congresoBD.crear(congresoNuevo);
         
         return congresoNuevo;
-    }
-
-    private boolean fechasLogicas(LocalDate fechaInicio, LocalDate fechaFin) {
-        return !fechaInicio.isAfter(fechaFin);
     }
 
     private boolean instalacionOcupada(Congreso congresoNuevo) throws AccesoDeDatosException {
@@ -148,6 +141,10 @@ public class ManejadorDeCongresos extends Manejador {
             }
         }
         return ganancia;
+    }
+
+    public void actualizarConvocatoria(Congreso congreso) throws AccesoDeDatosException {
+        congresoBD.actualizarConvocatoria(congreso);
     }
 
     

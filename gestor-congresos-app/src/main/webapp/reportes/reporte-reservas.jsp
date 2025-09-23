@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Reporte Participantes</title>
+        <title>Reporte Reservaciones</title>
         <jsp:include page="/includes/resources.jsp"/>
     </head>
     <body>
@@ -14,50 +14,50 @@
 
         <div class="container mt-4">
 
-            <h2 class="mb-4">Reporte de Participantes</h2>
+            <h2 class="mb-4">Reporte de Reservaciones</h2>
 
             <form action="${pageContext.servletContext.contextPath}/reportes-admin-congreso" method="get" class="row g-3 mb-5">
-                <input type="hidden" name="reporte" value="participaciones">
-                <div class="col-md-4">
-                    <label for="rol" class="form-label">Rol</label>
-                    <select id="rol" name="rol" class="form-select" required>
-                        <option value="" disabled selected>Selecciona un rol</option>
-                        <option value="ASISTENTE">ASISTENTE</option>
-                        <option value="TALLERISTA">TALLERISTA</option>
-                        <option value="PONENTE">PONENTE</option>
-                        <option value="PONENTE_INVITADO">PONENTE_INVITADO</option>
-                        <option value="COMITE">COMITE</option>
+                <input type="hidden" name="reporte" value="${param.reporte}">
+                <div class="col-md-6">
+                    <label for="actividad" class="form-label">Actividad</label>
+                    <select id="actividad" name="actividad" class="form-select">
+                        <option value="" disabled selected>Selecciona una actividad</option>
+                        <c:forEach var="act" items="${actividadesAtributo}">
+                            <option value="${act.nombre}">${act.nombre} (Congreso: ${act.congresoNombre})</option>
+                        </c:forEach>
                     </select>
                 </div>
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <button type="submit" class="btn btn-primary">Buscar por nombre</button>
                 </div>
             </form>
                 <div id="fuente">
-            <div class="mb-5 row row-cols-1 row-cols-md-3 g-4">
-                <c:forEach var="p" items="${participacionesAtributo}">
+            <div class="mb-5 row row-cols-1 row-cols-md-2 g-4">
+                <c:forEach var="r" items="${reservasAtributo}">
                     <div class="col">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
-                                <h5 class="card-title">Usuario: ${p.usuario.nombre}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">ID: ${p.usuario.id}</h6>
+                                <h5 class="card-title">Actividad: ${r.actividad.nombre} (${r.actividad.congresoNombre})</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Tipo: ${r.actividad.tipo}</h6>
                                 <p class="card-text">
-                                    <strong>Congreso</strong> ${p.congresoNombre}<br>
-                                    <strong>Correo:</strong> ${p.usuario.correo}<br>
-                                    <strong>Teléfono:</strong> ${p.usuario.numero}<br>
-                                    <strong>Tipo:</strong> ${p.rol}
+                                    <strong>Cupo total:</strong> ${r.actividad.cupo}<br>
+                                </p>
+                                <hr>
+                                <h6>Datos del usuario</h6>
+                                <p class="card-text">
+                                    <strong>ID:</strong> ${r.usuarioEntidad.id}<br>
+                                    <strong>Nombre:</strong> ${r.usuarioEntidad.nombre}<br>
+                                    <strong>Correo:</strong> ${r.usuarioEntidad.correo}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </c:forEach>
-            </div>
-            </div>
+            </div></div>
                 <div class="mb-3 text-end">
                     <button id="exportBtn" type="button" class="btn btn-success">Exportar HTML</button>
                 </div>
         </div>
-                
                 <script>
             document.getElementById('exportBtn').addEventListener('click', function () {
                 const exportNode = document.getElementById('fuente');
@@ -150,4 +150,3 @@
         </script>
     </body>
 </html>
-

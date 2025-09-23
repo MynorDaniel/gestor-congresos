@@ -53,7 +53,8 @@ public class ActividadControlador extends HttpServlet {
             
             ManejadorDeParticipaciones mp = new ManejadorDeParticipaciones();
             Participacion[] comite = mp.obtenerComite(actividad.getCongresoNombre());
-         
+            
+            request.setAttribute("reservacionesAtributo", manejador.obtenerReservaciones(actividad));
             request.setAttribute("comiteAtributo", comite);
             request.setAttribute("actividadAtributo", actividad);
             request.getRequestDispatcher("actividades/actividad.jsp").forward(request, response);
@@ -105,6 +106,8 @@ public class ActividadControlador extends HttpServlet {
                 String esTrabajo = request.getParameter("esTrabajo");
                 if(StringUtils.isBlank(esTrabajo) || !esTrabajo.equals("true")){
                     if(!congreso.getCreador().equals(((Usuario) request.getSession().getAttribute("usuarioSession")).getId())) throw new UsuarioInvalidoException("No puedes modificar este congreso");
+                }else{
+                    if(!congreso.isConvocando()) throw new AccesoDeDatosException("Convocatoria cerrada");
                 }
 
                 //Crear actividad

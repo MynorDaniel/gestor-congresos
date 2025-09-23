@@ -1,10 +1,16 @@
+<%-- 
+    Document   : reporte-asistencias
+    Created on : Sep 23, 2025, 6:20:30 AM
+    Author     : mynordma
+--%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Reporte Participantes</title>
+        <title>Reporte Asistencias</title>
         <jsp:include page="/includes/resources.jsp"/>
     </head>
     <body>
@@ -14,51 +20,76 @@
 
         <div class="container mt-4">
 
-            <h2 class="mb-4">Reporte de Participantes</h2>
+            <h2 class="mb-4">Reporte de Asistencias</h2>
 
             <form action="${pageContext.servletContext.contextPath}/reportes-admin-congreso" method="get" class="row g-3 mb-5">
-                <input type="hidden" name="reporte" value="participaciones">
+                <input type="hidden" name="reporte" value="asistencias">
+                <c:set var="congresoNombre" value=""></c:set>
+
                 <div class="col-md-4">
-                    <label for="rol" class="form-label">Rol</label>
-                    <select id="rol" name="rol" class="form-select" required>
-                        <option value="" disabled selected>Selecciona un rol</option>
-                        <option value="ASISTENTE">ASISTENTE</option>
-                        <option value="TALLERISTA">TALLERISTA</option>
-                        <option value="PONENTE">PONENTE</option>
-                        <option value="PONENTE_INVITADO">PONENTE_INVITADO</option>
-                        <option value="COMITE">COMITE</option>
+                    <label for="actividad" class="form-label">Actividad</label>
+                    <select id="actividad" name="actividad" class="form-select">
+                        <option value="" selected>Todas</option>
+                        <c:forEach var="a" items="${actividadesAtributo}">
+                            <option value="${a.nombre}">
+                                ${a.nombre} (Congreso: ${a.congresoNombre})
+                            </option>
+                            <c:set var="congresoNombre" value="${a.congresoNombre}"></c:set>
+                        </c:forEach>
                     </select>
                 </div>
+
+                
+                <div class="col-md-4">
+                    <label for="salon" class="form-label">Salón</label>
+                    <select id="salon" name="salon" class="form-select">
+                        <option value="" selected>Todos</option>
+                        <c:forEach var="s" items="${salonesAtributo}">
+                            <option value="${s.nombre}">${s.nombre} (Instalación ID: ${s.instalacion})</option>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                    <input type="date" id="fechaInicio" name="fecha-inicio" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label for="fechaFin" class="form-label">Fecha Fin</label>
+                    <input type="date" id="fechaFin" name="fecha-fin" class="form-control">
+                </div>
+
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <button type="submit" class="btn btn-primary">Buscar</button>
                 </div>
             </form>
+
                 <div id="fuente">
             <div class="mb-5 row row-cols-1 row-cols-md-3 g-4">
-                <c:forEach var="p" items="${participacionesAtributo}">
+                <c:forEach var="as" items="${asistenciasAtributo}">
                     <div class="col">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
-                                <h5 class="card-title">Usuario: ${p.usuario.nombre}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">ID: ${p.usuario.id}</h6>
+                                <h5 class="card-title">Usuario: ${as.usuario}</h5>
                                 <p class="card-text">
-                                    <strong>Congreso</strong> ${p.congresoNombre}<br>
-                                    <strong>Correo:</strong> ${p.usuario.correo}<br>
-                                    <strong>Teléfono:</strong> ${p.usuario.numero}<br>
-                                    <strong>Tipo:</strong> ${p.rol}
+                                    <strong>Actividad:</strong> ${as.actividadNombre}<br>
+                                    <strong>Congreso:</strong> ${as.actividadCongresoNombre}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </c:forEach>
             </div>
+                
+                
             </div>
                 <div class="mb-3 text-end">
                     <button id="exportBtn" type="button" class="btn btn-success">Exportar HTML</button>
                 </div>
         </div>
-                
-                <script>
+    </body>
+    
+        <script>
             document.getElementById('exportBtn').addEventListener('click', function () {
                 const exportNode = document.getElementById('fuente');
                 if (!exportNode) {
@@ -94,7 +125,7 @@
                         border-radius: 12px;
                         box-shadow: 0 4px 10px rgba(0,0,0,0.08);
                         padding: 20px;
-                         border: 1px solid #000;
+                        border: 1px solid #000;
                       }
                       .card h4 {
                         margin-top: 0;
@@ -127,14 +158,17 @@
                             <body>
                             `;
 
+                // Footer del documento exportado
                 const footer = `
                     </body>
                     </html>`;
 
+                // innerHTML ya contiene el HTML generado por JSTL/EL
                 const content = exportNode.innerHTML;
 
                 const fullHtml = head + content + footer;
 
+                // Crear blob y forzar descarga
                 const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -142,12 +176,12 @@
                 a.download = 'reporte-congresos.html';
                 document.body.appendChild(a);
                 a.click();
+                // limpieza
                 setTimeout(() => {
                     URL.revokeObjectURL(url);
                     a.remove();
                 }, 1000);
             });
         </script>
-    </body>
-</html>
 
+</html>

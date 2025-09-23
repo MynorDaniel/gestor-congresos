@@ -9,6 +9,7 @@ import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.modelo.FiltrosUsuario;
 import com.mynor.gestor.congresos.app.modelo.RolSistema;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
+import java.time.LocalDate;
 
 /**
  *
@@ -24,5 +25,9 @@ public abstract class Manejador {
         Usuario usuario = usuarioBD.leer(filtros)[0];
         
         return usuario.getRol() == RolSistema.ADMIN_CONGRESOS;
+    }
+    
+    protected boolean fechasLogicas(LocalDate fechaInicio, LocalDate fechaFin) {
+        return !fechaInicio.isAfter(fechaFin);
     }
 }

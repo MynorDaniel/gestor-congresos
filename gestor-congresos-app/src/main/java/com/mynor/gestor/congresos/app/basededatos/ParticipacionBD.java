@@ -93,5 +93,36 @@ public class ParticipacionBD extends BaseDeDatos {
             }
         }
     }
+
+    public Participacion[] leerPorCongreso(String nombre) throws AccesoDeDatosException {
+        String sql = "SELECT usuario, congreso, rol FROM participacion WHERE congreso = ?";
+
+        Connection conn = ConexionBD.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql,
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY)) {
+
+            ps.setString(1, nombre);
+            ResultSet rs = ps.executeQuery();
+
+            Participacion[] participaciones = new Participacion[obtenerLongitudDeResultSet(rs)];
+            int i = 0;
+            while (rs.next()) {
+                Participacion p = new Participacion();
+                p.setUsuarioId(rs.getString("usuario"));
+                p.setCongresoNombre(rs.getString("congreso"));
+                p.setRol(Rol.valueOf(rs.getString("rol")));
+                participaciones[i] = p;
+                i++;
+            }
+
+            return participaciones;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new AccesoDeDatosException("Error al leer participaciones por congreso");
+        }
+    }
+
     
 }

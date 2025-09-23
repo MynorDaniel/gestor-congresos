@@ -33,6 +33,7 @@
                             <td>${inscripcion.congresoNombre}</td>
                             <td>
                                 <a href="${pageContext.servletContext.contextPath}/congresos?nombre=${inscripcion.congresoNombre}">Ver congreso</a>
+                                <a href="${pageContext.servletContext.contextPath}/diploma?congreso=${inscripcion.congresoNombre}">Generar diploma</a>
                             </td>
                         </tr>
                     </c:forEach>

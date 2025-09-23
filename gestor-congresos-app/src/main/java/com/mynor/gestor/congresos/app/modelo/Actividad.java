@@ -26,6 +26,24 @@ public class Actividad {
     private LocalDate dia;
     private String autorId;
     private EncargadoActividad[] encargados;
+    private int reservasRealizadas;
+    private int cuposDisponibles;
+
+    public int getReservasRealizadas() {
+        return reservasRealizadas;
+    }
+
+    public void setReservasRealizadas(int reservasRealizadas) {
+        this.reservasRealizadas = reservasRealizadas;
+    }
+
+    public int getCuposDisponibles() {
+        return cuposDisponibles;
+    }
+
+    public void setCuposDisponibles(int cuposDisponibles) {
+        this.cuposDisponibles = cuposDisponibles;
+    }
 
     public EncargadoActividad[] getEncargados() {
         return encargados;

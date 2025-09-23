@@ -54,6 +54,12 @@
                     <a href="congresos/editar?nombre=${congreso.nombre}" class="btn btn-secondary mt-3">Editar</a>
                     <a href="${pageContext.servletContext.contextPath}/crear-actividad-form?congresoNombre=${congreso.nombre}" class="btn btn-secondary mt-3">Agregar actividad</a>
                     <a href="${pageContext.servletContext.contextPath}/registro?rol=ponente-invitado&congreso=${congreso.nombre}" class="btn btn-secondary mt-3">Agregar ponente invitado</a>
+                    <form action="${pageContext.servletContext.contextPath}/convocatoria" method="post" style="display:inline;">
+                        <input type="hidden" name="convocando" value="${congreso.convocando}">
+                        <input type="hidden" name="congreso" value="${congreso.nombre}">
+                        <button type="submit" class="btn btn-secondary mt-3">Abrir/cerrar convocatoria</button>
+                    </form>
+
                 </c:if>
                 
                 <h2 class="mt-3">Comité científico</h2>
@@ -109,8 +115,18 @@
                                 <td>${actividad.dia}</td>
                                 <td>
                                     <a href="${pageContext.servletContext.contextPath}/actividades?congreso=${congreso.nombre}&nombre=${actividad.nombre}" 
-                                       class="btn btn-sm btn-primary">Ver</a>
+                                       class="btn btn-sm btn-primary mb-1">Ver</a>
+
+                                    <form action="${pageContext.servletContext.contextPath}/asistencias" method="post" class="d-flex align-items-center gap-1 flex-wrap">
+                                        <input type="hidden" name="congreso" value="${congreso.nombre}"/>
+                                        <input type="hidden" name="actividad" value="${actividad.nombre}"/>
+
+                                        <input type="text" name="usuario" class="form-control form-control-sm" placeholder="ID Usuario" style="width: 100px;"/>
+                                        <button type="submit" class="btn btn-sm btn-success">Registrar asistencia</button>
+                                    </form>
                                 </td>
+
+
                             </tr>
                         </c:forEach>
                     </tbody>

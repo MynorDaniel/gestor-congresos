@@ -7,9 +7,13 @@ package com.mynor.gestor.congresos.app.casodeuso;
 import com.mynor.gestor.congresos.app.basededatos.InstalacionBD;
 import com.mynor.gestor.congresos.app.excepcion.AccesoDeDatosException;
 import com.mynor.gestor.congresos.app.excepcion.UsuarioInvalidoException;
+import com.mynor.gestor.congresos.app.modelo.Congreso;
 import com.mynor.gestor.congresos.app.modelo.Instalacion;
 import com.mynor.gestor.congresos.app.modelo.Salon;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -46,5 +50,13 @@ public class ManejadorDeInstalaciones extends Manejador {
 
     public Instalacion obtenerPorCongreso(String nombreCongreso) throws AccesoDeDatosException {
         return instalacionBD.leer(nombreCongreso);
+    }
+
+    public Salon[] obtenerPorCongresos(Congreso[] congresos) throws AccesoDeDatosException {
+        List<Salon> salones = new LinkedList<>();
+        for (Congreso congreso : congresos) {
+            salones.addAll(Arrays.asList(this.obtenerSalones(congreso.getInstalacionId())));
+        }
+        return salones.toArray(Salon[]::new);
     }
 }

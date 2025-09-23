@@ -13,6 +13,10 @@ import com.mynor.gestor.congresos.app.modelo.FiltrosUsuario;
 import com.mynor.gestor.congresos.app.modelo.Participacion;
 import com.mynor.gestor.congresos.app.modelo.Rol;
 import com.mynor.gestor.congresos.app.modelo.Usuario;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -67,6 +71,33 @@ public class ManejadorDeParticipaciones extends Manejador {
             
         }
         return participaciones;
+    }
+    
+    public Participacion[] obtenerPorCreadorDeCongreso(String id, String rol) throws AccesoDeDatosException, IllegalArgumentException {
+        ManejadorDeCongresos mc = new ManejadorDeCongresos();
+        Congreso[] congresos = mc.obtenerCongresos(id);
+        
+        List<Participacion> participaciones = new LinkedList<>();
+        
+        for (Congreso congreso : congresos) {
+            if(!StringUtils.isBlank(rol)){
+                Participacion[] participacionesCongreso = participacionBD.leerPorCongresoYRol(congreso.getNombre(), Rol.valueOf(rol));
+                participaciones.addAll(Arrays.asList(participacionesCongreso));
+            }else{
+                Participacion[] participacionesCongreso = participacionBD.leerPorCongreso(congreso.getNombre());
+                participaciones.addAll(Arrays.asList(participacionesCongreso));
+            }
+            
+        }
+        
+        UsuarioBD usuarioBD = new UsuarioBD();
+        for (Participacion p : participaciones) {
+            FiltrosUsuario filtros = new FiltrosUsuario();
+            filtros.setId(p.getUsuarioId());
+            p.setUsuario(usuarioBD.leer(filtros)[0]);
+        }
+        
+        return participaciones.toArray(Participacion[]::new);
     }
     
 }
