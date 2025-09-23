@@ -1,0 +1,297 @@
+Casos de uso
+
+Participantes
+
+Número: 001
+Caso de uso: Creación de cuenta tipo participante
+Actores: Participante
+Descripción: El Participante solicita registrarse, el Sistema muestra un formulario, el Participante ingresa sus datos y confirma el registro, el Sistema muestra el éxito de la operación.
+Tipo: Primario
+
+Número: 002
+Caso de uso: Ver congresos disponibles
+Actores: Participante
+Descripción: El Participante solicita consultar la lista de congresos, el Sistema muestra los congresos disponibles.
+Tipo: Secundario
+
+Número: 003
+Caso de uso: Ver actividades de un congreso
+Actores: Participante
+Descripción: El Participante selecciona un congreso, el Sistema muestra el listado de actividades.
+Tipo: Secundario
+
+Número: 004
+Caso de uso: Inscribirse a congreso
+Actores: Participante
+Descripción: El Participante solicita inscribirse a un congreso, selecciona sus tipos de participación y el Sistema registra la inscripción pendiente de pago.
+Tipo: Primario
+
+Número: 005
+Caso de uso: Pagar inscripción
+Actores: Participante
+Descripción: El Participante confirma el pago de una inscripción utilizando saldo de la cartera digital, el Sistema descuenta el monto, aplica la comisión y confirma el éxito de la transacción.
+Tipo: Primario
+
+Número: 006
+Caso de uso: Enviar trabajo a congreso
+Actores: Participante
+Descripción: El Participante envía un trabajo (ponencia o taller) para un congreso con convocatoria abierta, el Sistema almacena la propuesta para su evaluación.
+Tipo: Primario
+
+Número: 007
+Caso de uso: Recargar cartera digital
+Actores: Participante
+Descripción: El Participante solicita recargar su cartera digital indicando el monto y la fecha, el Sistema actualiza el saldo disponible.
+Tipo: Primario
+
+Número: 008
+Caso de uso: Reservar cupo a actividad tipo taller
+Actores: Participante
+Descripción: El Participante solicita reservar un cupo en un taller, el Sistema valida disponibilidad y confirma la reserva.
+Tipo: Primario
+
+Número: 009
+Caso de uso: Generar certificado
+Actores: Participante
+Descripción: El Participante solicita su diploma de participación, el Sistema valida los criterios y genera el certificado.
+Tipo: Secundario
+
+Administradores de congreso
+
+Número: 010
+Caso de uso: Crear congreso
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso crea un nuevo congreso asociado a su institución, definiendo precio, fechas, ubicación e información básica.
+Tipo: Primario
+
+Número: 011
+Caso de uso: Abrir convocatoria
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso abre una convocatoria para recepción de trabajos en el congreso, el Sistema habilita el registro de propuestas.
+Tipo: Primario
+
+Número: 012
+Caso de uso: Cerrar convocatoria
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso cierra la convocatoria de recepción de trabajos, el Sistema bloquea el envío de nuevas propuestas.
+Tipo: Secundario
+
+Número: 013
+Caso de uso: Evaluar trabajo
+Actores: Participante
+Descripción: El comité científico revisa un trabajo enviado, el Sistema registra la decisión de aprobar o rechazar.
+Tipo: Primario
+
+Número: 014
+Caso de uso: Definir comité científico
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso selecciona usuarios del sistema para integrarlos como comité científico, el Sistema actualiza la composición del comité.
+Tipo: Primario
+
+Número: 015
+Caso de uso: Crear cuenta invitado
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso registra en el sistema a un ponente invitado que no posee cuenta, el Sistema crea la cuenta correspondiente.
+Tipo: Secundario
+
+Número: 016
+Caso de uso: Registrar instalación
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso registra una instalacion con sus salones, el Sistema almacena la instalación disponible para asignar actividades.
+Tipo: Primario
+
+Número: 017
+Caso de uso: Registrar actividad
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso crea una nueva actividad del congreso, el Sistema valida la información y la almacena.
+Tipo: Primario
+
+Número: 018
+Caso de uso: Asignar salones a actividades
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso selecciona un salón para una actividad, el Sistema valida disponibilidad y lo asigna.
+Tipo: Primario
+
+Número: 019
+Caso de uso: Modificar actividad
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso actualiza los datos de una actividad existente, el Sistema aplica las modificaciones respetando restricciones.
+Tipo: Secundario
+
+Número: 020
+Caso de uso: Registrar asistencia
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso registra la asistencia de un participante a una actividad ingresando su número de identificación, el Sistema valida y almacena el registro.
+Tipo: Primario
+
+Número: 021
+Caso de uso: Ver participantes
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso consulta el listado general de participantes del congreso, el Sistema muestra la información con posibilidad de filtrar.
+Tipo: Secundario
+
+Número: 022
+Caso de uso: Ver asistencias
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso consulta el registro de asistencias por actividad, el Sistema presenta la información con opciones de filtro.
+Tipo: Secundario
+
+Número: 023
+Caso de uso: Ver reservas a talleres
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso consulta el listado de reservas a talleres, el Sistema muestra cupos, reservas y participantes con opción de filtrar.
+Tipo: Secundario
+
+Número: 024
+Caso de uso: Ver ganancias por congreso
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso consulta un reporte de ganancias de su congreso, el Sistema muestra los datos.
+Tipo: Secundario
+
+Administradores de sistema
+
+Número: 025
+Caso de uso: Cambiar comisión por pago de inscripción
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema actualiza el porcentaje de comisión por inscripción, el Sistema aplica el nuevo valor a futuros pagos.
+Tipo: Primario
+
+Número: 026
+Caso de uso: Crear institución
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema registra una nueva institución en el sistema, el Sistema la almacena para asociar futuros congresos.
+Tipo: Primario
+
+Número: 027
+Caso de uso: Crear usuario
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema crea un nuevo usuario del sistema con el rol correspondiente, el Sistema registra la cuenta.
+Tipo: Primario
+
+Número: 028
+Caso de uso: Desactivar usuario
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema desactiva una cuenta existente, el Sistema asegura que siempre quede al menos un administrador activo.
+Tipo: Secundario
+
+Número: 029
+Caso de uso: Ver reporte de ganancias
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema consulta un reporte de ganancias en un periodo de tiempo, el Sistema genera el informe con filtros y totales.
+Tipo: Secundario
+
+Número: 030
+Caso de uso: Ver reporte de congresos
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema consulta el listado de congresos por institución en un intervalo de tiempo, el Sistema presenta la información.
+Tipo: Secundario
+
+Número: 031
+Caso de uso: Ver congreso
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso consulta la información general de un congreso, el Sistema muestra los datos registrados.
+Tipo: Secundario
+
+Número: 032
+Caso de uso: Modificar congreso
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso edita los datos de un congreso previamente creado, el Sistema actualiza la información.
+Tipo: Primario
+
+Número: 033
+Caso de uso: Eliminar congreso
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso elimina un congreso previamente registrado, el Sistema confirma la operación y retira el congreso del listado.
+Tipo: Primario
+
+Número: 034
+Caso de uso: Eliminar trabajo
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso elimina un trabajo previamente enviado, el Sistema valida la acción y retira el trabajo del registro.
+Tipo: Primario
+
+Número: 035
+Caso de uso: Modificar comité científico
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso actualiza la información o asignación de miembros en el comité científico de un congreso, el Sistema guarda los cambios.
+Tipo: Primario
+
+Número: 036
+Caso de uso: Eliminar miembro de comité científico
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso elimina un miembro del comité científico de un congreso, el Sistema valida la acción y actualiza el comité.
+Tipo: Primario
+
+Número: 037
+Caso de uso: Modificar invitado
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso actualiza los datos de un invitado previamente registrado, el Sistema guarda los cambios.
+Tipo: Primario
+
+Número: 038
+Caso de uso: Eliminar invitado
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso elimina un invitado previamente registrado, el Sistema valida la acción y actualiza la información.
+Tipo: Primario
+
+Número: 039
+Caso de uso: Ver instalaciones
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso consulta el listado de instalaciones registradas, el Sistema presenta la información.
+Tipo: Secundario
+
+Número: 040
+Caso de uso: Modificar instalación
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso actualiza los datos de una instalación previamente registrada, el Sistema guarda los cambios.
+Tipo: Primario
+
+Número: 041
+Caso de uso: Eliminar instalación
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso elimina una instalación previamente registrada, el Sistema valida la acción y retira la instalación.
+Tipo: Primario
+
+Número: 042
+Caso de uso: Eliminar actividad
+Actores: Administrador de congreso
+Descripción: El Administrador de congreso elimina una actividad previamente registrada, el Sistema valida la acción y actualiza la información.
+Tipo: Primario
+
+Número: 043
+Caso de uso: Ver instituciones
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema consulta el listado de instituciones registradas, el Sistema presenta la información.
+Tipo: Secundario
+
+Número: 044
+Caso de uso: Modificar institución
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema actualiza los datos de una institución previamente creada, el Sistema guarda los cambios.
+Tipo: Primario
+
+Número: 045
+Caso de uso: Eliminar institución
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema elimina una institución previamente registrada, el Sistema valida la acción y retira la institución del listado.
+Tipo: Primario
+
+Número: 046
+Caso de uso: Ver usuarios
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema consulta el listado de usuarios registrados, el Sistema presenta la información.
+Tipo: Secundario
+
+Número: 047
+Caso de uso: Modificar usuario
+Actores: Administrador de sistema
+Descripción: El Administrador de sistema actualiza los datos de un usuario previamente registrado, el Sistema guarda los cambios.
+Tipo: Primario
+
+Número: 048
+Caso de uso: Asignar instalacion a congreso
+Actores: Administrador de sistema
+Descripción: El Administrador de congreso selecciona una institucion para un congreso, el Sistema valida disponibilidad y lo asigna.
+Tipo: Primario
+
+---
